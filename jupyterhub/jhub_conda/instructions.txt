@@ -1,0 +1,11 @@
+Build image:
+docker build -t jhub_conda:latest -f dockerfiles\Dockerfile context
+
+Start container: 
+docker run -d --name jhub_conda -v J:\ssl:/etc/ssl/ -p 8000:8000 jhub_conda:latest
+
+Access container:
+docker exec -it jhub_conda bash
+
+Connect to server: 
+https://neuro-wang-15.mit.edu:8000/hub/login
