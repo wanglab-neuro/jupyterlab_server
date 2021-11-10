@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  jupyterhub:
+    build: 
+      context: ./jupyterhub/jhub_matlab/context
+      dockerfile: ../dockerfiles/Dockerfile
+    image: jhub_matlab:latest
+    container_name: jhub_matlab
+    networks:
+      default:
+        aliases:
+          - jhub_matlab
+    volumes:
+      - /etc/ssl/:/etc/ssl/
+      - ~/data/d:/data
+      - ~/data/shared_files:/srv/shared_files
+      - ~/data/shared_code:/srv/shared_code
+    #environment:
+    #  - DOCKER_JUPYTER_CONTAINER=jupyterlab_img
+    #  - DOCKER_NETWORK_NAME=${COMPOSE_PROJECT_NAME}_default
+    #  - HUB_IP='0.0.0.0' #using jupyterhub (container name) fails
+    #  - HOST
+    #labels:
+    #  - "traefik.enable=true"
+    #  - "traefik.frontend.rule=Host:${HOST}"
+    ports:
+      - "8000:8000"
+    restart: on-failure
+
+
+
