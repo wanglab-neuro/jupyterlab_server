@@ -1,5 +1,5 @@
-# jupyterlab_server
- jupyterlab served by jupyterhub 
+# jupyterlab server
+ [jupyterlab](https://jupyterlab.readthedocs.io/en/latest/) served by [jupyterhub](https://jupyterhub.readthedocs.io/en/stable/)
 
 **Build**  
 `docker-compose build`
