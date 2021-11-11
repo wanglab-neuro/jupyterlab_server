@@ -1,0 +1,5 @@
+name: jmatlab
+dependencies:
+  - python=3.9
+  - jupyter
+  - ipykernel

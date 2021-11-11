@@ -3,30 +3,43 @@ version: '3'
 services:
   jupyterhub:
     build: 
-      context: ./jupyterhub/jhub_matlab/context
+      context: ./jupyterhub/jhub_docker_spawner/context
       dockerfile: ../dockerfiles/Dockerfile
-    image: jhub_matlab:latest
-    container_name: jhub_matlab
-    networks:
-      default:
-        aliases:
-          - jhub_matlab
+    image: jhub_ds:latest #wanglabneuro/jhub_ds:latest
+    container_name: jhub_ds
     volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - hub_data:/srv/jupyterhub
       - /etc/ssl/:/etc/ssl/
-      - ~/data/d:/data
-      - ~/data/shared_files:/srv/shared_files
-      - ~/data/shared_code:/srv/shared_code
-    #environment:
-    #  - DOCKER_JUPYTER_CONTAINER=jupyterlab_img
-    #  - DOCKER_NETWORK_NAME=${COMPOSE_PROJECT_NAME}_default
-    #  - HUB_IP='0.0.0.0' #using jupyterhub (container name) fails
-    #  - HOST
-    #labels:
-    #  - "traefik.enable=true"
-    #  - "traefik.frontend.rule=Host:${HOST}"
+    environment:
+      - DOCKER_JUPYTER_CONTAINER=jlab_matlab:v1
+      - DOCKER_NETWORK_NAME=jupyterhub_jupyter
+      - HUB_IP=jupyterhub_hub #'0.0.0.0'
+      - HOST
     ports:
       - "8000:8000"
     restart: on-failure
+    networks:
+      default:
+      jupyter:
+        aliases:
+          - jupyterhub_hub
+  jupyterlab:
+    build: 
+      context: ./jupyterlab/jlab_matlab/context
+      dockerfile: ../dockerfiles/Dockerfile
+    image: jlab_matlab:v1 #wanglabneuro/jlab_matlab:v1
+    container_name: jupyterlab-throwaway
+    volumes:       
+      - ~/data/d:/data
+      - ~/data/shared_files:/srv/shared_files
+      - ~/data/shared_code:/srv/shared_code
+    network_mode: none
+    command: echo
 
-
-
+volumes:
+  hub_data:
+  
+networks:
+  jupyter:
+    internal: true

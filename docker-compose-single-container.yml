@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  jupyterhub:
+    build: 
+      context: ./jupyterhub/jhub_matlab/context
+      dockerfile: ../dockerfiles/Dockerfile
+    image: jhub_matlab:latest
+    container_name: jhub_matlab
+    networks:
+      default:
+        aliases:
+          - jhub_matlab
+    volumes:
+      - /etc/ssl/:/etc/ssl/
+      - ~/data/d:/data
+      - ~/data/shared_files:/srv/shared_files
+      - ~/data/shared_code:/srv/shared_code
+    ports:
+      - "8000:8000"
+    restart: on-failure
+
+
+
