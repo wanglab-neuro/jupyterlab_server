@@ -1,10 +1,10 @@
-FROM jupyter/scipy-notebook:latest
+FROM jupyter/scipy-notebook:hub-1.4.2
 
 LABEL maintainer="Vincent Prevosto"
 
 # update Anaconda and install pip 
-RUN conda update -y conda && \
-     conda install -y pip
+#RUN conda update -y conda && \
+#     conda install -y pip
 
 USER root
 
@@ -12,7 +12,8 @@ USER root
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     fonts-dejavu \
-    tzdata && \
+    tzdata \
+    scilab && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -35,14 +36,35 @@ COPY packages packages
 
 # Conda installs
 RUN conda install --quiet --yes \
-    jupyterhub \
-    jupyterlab \
     'r-base' \
-    'r-irkernel' && \
+    'r-irkernel' \
+    'r-plyr' \
+    'r-devtools' \
+    'r-tidyverse' \
+    'r-shiny' \
+    'r-rmarkdown' \
+    'r-rsqlite' \
+    'r-reshape2' \
+    'r-caret' \
+    'r-rcurl' \
+    'r-crayon' \
+    'r-randomforest' \
+    'r-htmltools' \
+    'r-sparklyr' \
+    'r-htmlwidgets' \
+    'r-hexbin' \
+    'jupyterhub' \
+    'julia' && \
+    conda clean -tipsy && \
+    fix-permissions $CONDA_DIR
+
+RUN conda config --set channel_priority flexible && \
     conda install -y -c conda-forge nb_conda_kernels \
     jupyter_contrib_nbextensions \
     jupyterlab-git && \
     conda clean -tipsy
+
+ENV CPATH=$CONDA_DIR/include
 
 # Install Matlab kernel in dedicated environnement
 RUN conda env create -f packages/jmatlab_env.yml

@@ -30,35 +30,9 @@ def pre_spawn_hook(spawner):
 
 c.Spawner.pre_spawn_hook = pre_spawn_hook
 
-
 ## Generic
 #c.JupyterHub.admin_access = True #give admins permission to log in to the single user notebook servers owned by other users
 c.Spawner.default_url = '/lab'
-
-c.JupyterHub.ssl_key = '/etc/ssl/private/neuro-wang-15.mit.edu.key'
-c.JupyterHub.ssl_cert = '/etc/ssl/certs/neuro-wang-15_mit_edu_cert.cer'
-
-"""
-## Authenticator
-
-from oauthenticator.generic import GenericOAuthenticator
-
-#c.Application.log_level = 'DEBUG'
-
-c.JupyterHub.authenticator_class = GenericOAuthenticator
-c.GenericOAuthenticator.client_id = os.environ['OAUTH2_CLIENT_ID']
-c.GenericOAuthenticator.client_secret = os.environ['OAUTH2_CLIENT_SECRET']
-c.GenericOAuthenticator.token_url = 'https://gymnasium-ditzingen.de/iserv/oauth/v2/token'
-c.GenericOAuthenticator.userdata_url = os.environ['OAUTH2_USERDATA_URL']
-c.GenericOAuthenticator.userdata_params = {'state': 'state'}
-# the next can be a callable as well, e.g.: lambda t: t.get('complex').get('structure').get('username')
-#c.GenericOAuthenticator.username_key = 'preferred_username'
-c.GenericOAuthenticator.login_service = 'IServ'
-c.GenericOAuthenticator.scope = ['openid', 'profile', 'email', 'groups']
-c.GenericOAuthenticator.admin_groups = ['Admins', 'admins']
-c.GenericOAuthenticator.oauth_callback_url = 'https://jupyter.gymnasium-ditzingen.de/hub/oauth_callback'
-c.OAuthenticator.tls_verify = False
-"""
 
 ## Docker spawner
 c.JupyterHub.spawner_class = 'dockerspawner.DockerSpawner'
@@ -67,12 +41,20 @@ c.DockerSpawner.network_name = os.environ['DOCKER_NETWORK_NAME']
 # See https://github.com/jupyterhub/dockerspawner/blob/master/examples/oauth/jupyterhub_config.py
 c.JupyterHub.hub_ip = os.environ['HUB_IP']
 
+## Remove containers once they are stopped
+c.DockerSpawner.remove_containers = True
+
 # user data persistence
 # see https://github.com/jupyterhub/dockerspawner#data-persistence-and-dockerspawner
 notebook_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/jovyan' 
 c.DockerSpawner.notebook_dir = notebook_dir
 c.DockerSpawner.volumes = { 'jupyterhub-user-{username}': notebook_dir }
-
+# c.DockerSpawner.volumes = {
+#         'jupyterhub-user-{username}': home_dir,
+#         '/home/{username}/work': notebook_dir,
+#         '/home/ubuntu/data': {"bind": home_dir + '/data', "mode": "ro"},
+#         '/home/ubuntu/share': home_dir + '/share'
+#         }
 # Other stuff
 #c.Spawner.cpu_limit = 1
 #c.Spawner.mem_limit = '10G'
@@ -80,19 +62,19 @@ c.DockerSpawner.volumes = { 'jupyterhub-user-{username}': notebook_dir }
 
 ## Services
 
-c.JupyterHub.load_roles = [
-    {
-        "name": "jupyterhub-idle-culler-role",
-        "scopes": [
-            "list:users",
-            "read:users:activity",
-            "delete:servers",
-            # "admin:users", # if using --cull-users
-        ],
-        # assignment of role's permissions to:
-        "services": ["jupyterhub-idle-culler-service"],
-    }
-]
+# c.JupyterHub.load_roles = [
+#     {
+#         "name": "jupyterhub-idle-culler-role",
+#         "scopes": [
+#             "list:users",
+#             "read:users:activity",
+#             "delete:servers",
+#             # "admin:users", # if using --cull-users
+#         ],
+#         # assignment of role's permissions to:
+#         "services": ["jupyterhub-idle-culler-service"],
+#     }
+# ]
 c.JupyterHub.services = [
     {
         "name": "jupyterhub-idle-culler-service",

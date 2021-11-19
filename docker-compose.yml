@@ -5,41 +5,46 @@ services:
     build: 
       context: ./jupyterhub/jhub_docker_spawner/context
       dockerfile: ../dockerfiles/Dockerfile
-    image: jhub_ds:latest #wanglabneuro/jhub_ds:latest
-    container_name: jhub_ds
+    image: jhub_ds #wanglabneuro/jhub_ds:latest
+    container_name: jupyterhub
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - hub_data:/srv/jupyterhub
-      - /etc/ssl/:/etc/ssl/
+      - jupyterhub_data:/srv/jupyterhub
     environment:
       - DOCKER_JUPYTER_CONTAINER=jlab_matlab:v1
-      - DOCKER_NETWORK_NAME=jupyterhub_jupyter
-      - HUB_IP=jupyterhub_hub #'0.0.0.0'
+      - DOCKER_NETWORK_NAME=${COMPOSE_PROJECT_NAME}_default
+      - HUB_IP=jupyterhub
       - HOST
-    ports:
-      - "8000:8000"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:${HOST}"
     restart: on-failure
-    networks:
-      default:
-      jupyter:
-        aliases:
-          - jupyterhub_hub
+
   jupyterlab:
     build: 
       context: ./jupyterlab/jlab_matlab/context
       dockerfile: ../dockerfiles/Dockerfile
     image: jlab_matlab:v1 #wanglabneuro/jlab_matlab:v1
     container_name: jupyterlab-throwaway
-    volumes:       
-      - ~/data/d:/data
-      - ~/data/shared_files:/srv/shared_files
-      - ~/data/shared_code:/srv/shared_code
+    # volumes:       
+    #   - ~/data/d:/data
+    #   - ~/data/shared_files:/srv/shared_files
+    #   - ~/data/shared_code:/srv/shared_code
     network_mode: none
     command: echo
 
+  reverse-proxy:
+    image: traefik:1.7
+    container_name: reverse-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - ./reverse-proxy/traefik.toml:/etc/traefik/traefik.toml
+      - ./secret:/etc/certs
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: on-failure
+
 volumes:
-  hub_data:
-  
-networks:
-  jupyter:
-    internal: true
+  jupyterhub_data:
