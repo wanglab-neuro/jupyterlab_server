@@ -13,12 +13,12 @@ import os, sys, pwd, subprocess
 import shutil
 
 ## Authenticator
-# c.JupyterHub.authenticator_class = 'nativeauthenticator.NativeAuthenticator'
-c.Authenticator.admin_users = {'foo'}
+c.JupyterHub.authenticator_class = 'nativeauthenticator.NativeAuthenticator'
+c.Authenticator.admin_users = {'admin'}
 # Use dummy for testing purposes
-c.JupyterHub.authenticator_class = "dummy"
+# c.JupyterHub.authenticator_class = "dummy"
 # c.Authenticator.admin_users = { 'test' }
-c.DummyAuthenticator.password = "testpass"
+# c.DummyAuthenticator.password = "testpass"
 ## Generic
 #c.JupyterHub.admin_access = True #give admins permission to log in to the single user notebook servers owned by other users
 c.Spawner.default_url = '/lab'
