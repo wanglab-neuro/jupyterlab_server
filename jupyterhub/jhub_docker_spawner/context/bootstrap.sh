@@ -26,12 +26,15 @@ BASE_DIRECTORY=/home
 # User Directory: That's the private directory for the user to be created, if none exists
 USER_DIRECTORY=$BASE_DIRECTORY/$USER
 
-if ![ -d "$USER_DIRECTORY" ]; then
+if [ ! -d "$USER_DIRECTORY" ]; then
     echo "...creating a directory for the user: $USER_DIRECTORY"
     mkdir $USER_DIRECTORY
 fi
+if [ ! -d "$USER_DIRECTORY/work" ]; then
+    mkdir "$USER_DIRECTORY/work"
+fi
 
-TUTORIAL_DIRECTORY=$USER_DIRECTORY/tutorials
+TUTORIAL_DIRECTORY=$USER_DIRECTORY/work/tutorials
 
 if [ -d "$TUTORIAL_DIRECTORY" ]; then
     echo " tutorial directory for user already exists. skipped"
