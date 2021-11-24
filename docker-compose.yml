@@ -9,7 +9,8 @@ services:
     container_name: jupyterhub
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - jupyterhub_data:/srv/jupyterhub
+      - jupyterhub_data:/srv/jupyterhub # don't mount a host directory there, the db is there.      
+      - /volumes/jupyterhub:/home
     environment:
       - DOCKER_JUPYTER_CONTAINER=jlab_matlab:v1
       - DOCKER_NETWORK_NAME=${COMPOSE_PROJECT_NAME}_default
@@ -26,10 +27,6 @@ services:
       dockerfile: ../dockerfiles/Dockerfile
     image: jlab_matlab:v1 #wanglabneuro/jlab_matlab:v1
     container_name: jupyterlab-throwaway
-    # volumes:       
-    #   - ~/data/d:/data
-    #   - ~/data/shared_files:/srv/shared_files
-    #   - ~/data/shared_code:/srv/shared_code
     network_mode: none
     command: echo
 
