@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Bootstrap example script
+# Adapted from Bootstrap example script
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 
@@ -9,13 +9,6 @@ USER=$1
 if [ "$USER" == "" ]; then
     exit 1
 fi
-# ----------------------------------------------------------------------------
-
-
-# This example script will do the following:
-# - create one directory for the user $USER in a BASE_DIRECTORY (see below)
-# - create a "tutorials" directory within and download and unzip
-#   the PythonDataScienceHandbook from GitHub
 
 # Start the Bootstrap Process
 echo "bootstrap process running for user $USER ..."
@@ -25,28 +18,60 @@ BASE_DIRECTORY=/home
 
 # User Directory: That's the private directory for the user to be created, if none exists
 USER_DIRECTORY=$BASE_DIRECTORY/$USER
-
-if [ ! -d "$USER_DIRECTORY" ]; then
-    echo "...creating a directory for the user: $USER_DIRECTORY"
-    mkdir $USER_DIRECTORY
-fi
-if [ ! -d "$USER_DIRECTORY/work" ]; then
-    mkdir "$USER_DIRECTORY/work"
+WORK_DIRECTORY=$USER_DIRECTORY/work
+if [ ! -d "$WORK_DIRECTORY" ]; then
+    mkdir -p $WORK_DIRECTORY
 fi
 
-TUTORIAL_DIRECTORY=$USER_DIRECTORY/work/tutorials
+# Create How-to file if it doesn't exist 
+if [ ! -f "$WORK_DIRECTORY/HowTo.md" ]; then
+    echo $2 > "$WORK_DIRECTORY/HowTo.md"
+fi
+
+TUTORIAL_DIRECTORY=$WORK_DIRECTORY/tutorials
 
 if [ -d "$TUTORIAL_DIRECTORY" ]; then
-    echo " tutorial directory for user already exists. skipped"
-    exit 0 # all good. nothing to do.
+    echo "Tutorial directory for user already exists. Skipped"
+    exit 0 
 else
-    echo "...creating a tutorials directory for the user: $TUTORIAL_DIRECTORY"
+    echo "Creating a tutorials directory for the user: $TUTORIAL_DIRECTORY"
     mkdir $TUTORIAL_DIRECTORY
 
-    echo "...initial content loading for user ..."
+    echo "Initial content loading for user"
     cd $TUTORIAL_DIRECTORY
-    wget https://github.com/jakevdp/PythonDataScienceHandbook/archive/HEAD.zip
-    unzip -o HEAD.zip
-    rm HEAD.zip
+    
+    {
+        echo "### Wang lab Github repositories"
+        echo "https://github.com/wanglab-neuro"
+        echo "### Neurodata Without Borders "
+        echo "https://github.com/NeurodataWithoutBorders"
+        echo "### Spike Interface"
+        echo "https://spikeinterface.readthedocs.io/"
+        echo "### KiloSort"
+        echo "https://github.com/MouseLand/Kilosort"
+        echo "### suite2p"
+        echo "https://github.com/MouseLand/suite2p"
+        echo "### CaImAn"
+        echo "https://caiman.readthedocs.io/en/master/"
+        echo "### MIN1PIPE"
+        echo "https://github.com/JinghaoLu/MIN1PIPE"
+        echo "### DeepLabCut"
+        echo "https://deeplabcut.github.io/DeepLabCut"
+    }> Resources.md
+
+    # wget https://github.com/jakevdp/PythonDataScienceHandbook/archive/HEAD.zip
+    # unzip -o HEAD.zip #-d "PythonDataScienceHandbook/"
+    # rm HEAD.zip
+    git clone "https://github.com/jakevdp/PythonDataScienceHandbook.git" "Python-Data-Science-Handbook"
+    git clone "https://github.com/patrickmineault/research_code" "Writing-Good-Research-Code"
+    git clone "https://github.com/NeurodataWithoutBorders/nwb_tutorial.git" "Neurodata-Without-Borders"
+    git clone "https://github.com/LorenFrankLab/nwb_datajoint.git" "Frank-lab-NWB-Datajoint-pipeline"
+
+    NEUROPIXELS_DIR="Visual-Coding-Neuropixels"
+    mkdir $NEUROPIXELS_DIR && cd "$_"
+    wget https://allensdk.readthedocs.io/en/latest/_static/examples/nb/ecephys_quickstart.ipynb
+    wget https://allensdk.readthedocs.io/en/latest/_static/examples/nb/ecephys_session.ipynb
+
 fi
+
 exit 0

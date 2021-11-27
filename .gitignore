@@ -1,5 +1,12 @@
-secret/
-
 # Matlab installation files
 matlab_im/context/matlab/
 matlab_im/context/openmind/mit.nonshared.R2021b.tar.gz
+
+# secret files
+secret/
+
+# tests and temporary files
+tmp/ 
+
+# Zone.Identifier Files - created when copying from Windows to WSL filestructure
+*Zone.Identifier

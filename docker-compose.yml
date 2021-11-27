@@ -12,7 +12,7 @@ services:
       - jupyterhub_data:/srv/jupyterhub # don't mount a host directory there, the db is there.      
       - /volumes/jupyterhub:/home
     environment:
-      - DOCKER_JUPYTER_CONTAINER=jlab_matlab:v1
+      - DOCKER_JUPYTER_CONTAINER=jlab_base:multilanguage
       - DOCKER_NETWORK_NAME=${COMPOSE_PROJECT_NAME}_default
       - HUB_IP=jupyterhub
       - HOST
@@ -23,9 +23,9 @@ services:
 
   jupyterlab:
     build: 
-      context: ./jupyterlab/jlab_matlab/context
+      context: ./jupyterlab/jlab_multi/context
       dockerfile: ../dockerfiles/Dockerfile
-    image: jlab_matlab:v1 #wanglabneuro/jlab_matlab:v1
+    image: jlab_base:multilanguage #wanglabneuro/jlab_base:multilanguage
     container_name: jupyterlab-throwaway
     network_mode: none
     command: echo

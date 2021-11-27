@@ -1,0 +1,39 @@
+name: nwb_datajoint
+channels:
+  - conda-forge
+  - defaults
+  - franklab
+dependencies:
+  - python=3.8
+  - jupyterlab>=3.*
+  - nodejs=12.4.*
+  - pydotplus>=2.0.*
+  - dask>=2.30
+  - pip>=20.2.*
+  - position_tools
+  - track_linearization
+  - skan
+  - bottleneck
+  - ipympl
+  - tqdm
+  - nb_conda
+  - pip:
+    - labbox-ephys>=0.7
+    - labbox-ephys-widgets-jp>=0.1
+    - kachery
+    - kachery-client
+    - mountainsort4
+    - ml_ms4alg
+    - spikeinterface>0.90
+    - git+git://github.com/SpikeInterface/spikeextractors.git@e6f9255b0ff1a0140b313ae33b62b4676eeabfcd
+    - spikesorters
+    - spiketoolkit
+    - spikemetrics
+    - pynwb>=1.4,<2
+    - hdmf>=2.5.8,<3
+    - datajoint>=0.13.*
+    - ghostipy
+    - pymysql>=1.0.*
+    - h5py==2.10.*
+    - sortingview>=0.6.16
+    - git+git://github.com/LorenFrankLab/ndx-franklab-novela
