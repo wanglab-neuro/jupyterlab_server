@@ -114,8 +114,8 @@ To delete all images and volumes: `docker-compose down -v --rmi all` .
 To remove user account on the hub container: `rm -rf /srv/jupyterhub/*`
 
 ### Maintenance / backups
-Upgrading: https://jupyterhub.readthedocs.io/en/stable/admin/upgrading.html
-Backing up the JupyterHub database `sudo docker cp <container id>:/srv/jupyterhub/jupyterhub.sqlite jupyterhub.sqlite.bu`
+Upgrading: https://jupyterhub.readthedocs.io/en/stable/admin/upgrading.html  
+Backing up the JupyterHub database `sudo docker cp <container id>:/srv/jupyterhub/jupyterhub.sqlite jupyterhub.sqlite.bu`  
 Backing up user directories. See this [example](https://github.com/jupyterhub/jupyterhub-deploy-docker#how-can-i-backup-a-users-notebook-directory). 
 
 
