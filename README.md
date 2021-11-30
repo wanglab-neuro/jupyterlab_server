@@ -1,5 +1,6 @@
 ## jupyterlab server
-This Jupyterlab server is designed to run on local data analysis computers, using Docker containers. It's compatible with Linux and Windows (using WSL2).
+This [Jupyterlab](https://jupyterlab.readthedocs.io/en/latest/) server is designed to run on local data analysis computers, using Docker containers and [Jupyterhub](https://jupyterhub.readthedocs.io/en/stable/).
+It is OS independent (using WSL2 for Windows machines).
 
 **Main features**
 - allows concurrent access to data analysis computers (i.e., unlike Windows Remote Desktop Connection) 
