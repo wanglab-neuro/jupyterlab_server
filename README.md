@@ -1,24 +1,25 @@
 ## jupyterlab server
-This [Jupyterlab](https://jupyterlab.readthedocs.io/en/latest/) server is designed to run on local data analysis computers, using Docker containers and [Jupyterhub](https://jupyterhub.readthedocs.io/en/stable/).
-It is OS independent (using WSL2 for Windows machines).
+This [Jupyterlab](https://jupyterlab.readthedocs.io/en/latest/) server is designed to run on local data analysis computers, using Docker containers and [Jupyterhub](https://jupyterhub.readthedocs.io/en/stable/). This single-node, multi-container version (v2.x) is based on this [deployment](https://github.com/defeo/jupyterhub-docker/) and recent updates on forked repos.  
+It is OS independent (using WSL2 for Windows machines). 
 
 ### Main features
 - allows concurrent access to data analysis computers (i.e., unlike Windows Remote Desktop Connection) 
 - simplifies access and use of local computing resources, without having to know anything about setting up data analysis environments.  
 - enables sharing code and tutorials for easier training, and reuse of code developed by others.
 - provides a simple deployment with limited maintenance, that requires little sys admin knowledge.
+  
+The instructions below detail how to set up the server. 
 
 ### Configuration
 1. Install Docker (https://www.docker.com/get-started).  
 For Windows and MacOS machine, use Docker Desktop.  
 
 #### Additional instruction for Windows:
-   * Set up WSL if it's not installed already  
-		https://docs.microsoft.com/en-us/windows/wsl/setup/environment.  
+   * Set up WSL if it's not already installed: https://docs.microsoft.com/en-us/windows/wsl/setup/environment.  
    * [optional but advisable] Move WSL and Docker to a dedicated disk. Exemple below to move them to the "J" disk.  
 		    **WSL**   
 		    * Open PowerShell  
-		    * List installed distributions `wsl -l` 
+		    * List installed distributions `wsl -l`  
 		    * Create target directory and move there  
 		      `cd J:\` `mkdir WSL` `cd WSL` `mkdir Ubuntu2004` `cd Ubuntu2004`  
 		    * Shutdown WSL `wsl --shutdown`  
@@ -29,9 +30,7 @@ For Windows and MacOS machine, use Docker Desktop.
 		    * Check that import worked `wsl -l`  
 		    -  
 		    **Same procedure for Docker**  
-		    `cd J:\`  
-		    `mkdir Docker`  
-		    `cd Docker`  
+		    `cd J:\` `mkdir Docker` `cd Docker`  
 		    `wsl --shutdown`  
 		    `wsl --export docker-desktop-data docker-desktop-data.tar`  
 		    `wsl --unregister docker-desktop-data`  
@@ -72,20 +71,51 @@ Once the SSL Connection is enable, the unsecure address will not work. E.g., a c
 	* The shared directory. All files there will be available and modifiable by all users. A good place to start is to add the test notebooks from the notebooks folder.   
 
 7. [optional] enable GPU  
-	For NVidia, Install CUDA driver and tookit. See instructions : https://docs.nvidia.com/cuda/ . 
-	Two important points for Windows machines:
+	For NVidia, install CUDA driver and tookit. See instructions : https://docs.nvidia.com/cuda/.  
+	Two important points for Windows machines:  
 	* Services running on WSL (such as these containers) will only be able to access CUDA for recent Windows builts. In practice, this means Windows 11, or Windows 10 21H2 or higher (https://docs.microsoft.com/en-us/windows/whats-new/whats-new-windows-10-version-21h2#gpu-compute-support-for-the-windows-subsystem-for-linux). To upgrade to the later, register with Windows Insider program.
 	* From [CUDA's WSL doc](https://docs.nvidia.com/cuda/wsl-user-guide/index.html): *Normally, CUDA toolkit for Linux will have the CUDA driver for NVIDIA GPU packaged with it. On WSL2, the CUDA driver used is part of the Windows driver installed on the system and therefore care must be taken to not install this Linux driver as it will clobber your installation.*
 
-### Start the server  
-`docker-compose up -d`
-
-### For Matlab enabled jupyterlab  
-Build Matlab image first:  
+8. Select which Jupyterlab version to run  
+In `docker-compose.yml`, the default image is specified in  
 ```
-cd matlab_im
-docker build -t matlab_om:2021b -f dockerfiles/Dockerfile context
-```  
-See README file in `matlab_im` directory
+jupyterhub:
+...
+    environment:
+      - DOCKER_JUPYTER_CONTAINER=<jupyterlab image name:tag>
+```
+In addition, available images can be defined as follow (omit the build part if pulling from a Docker image repo):  
+```
+jupyterlab:
+    build: 
+      context: ./jupyterlab/<some jupyterlab flavor>/context
+      dockerfile: ../dockerfiles/Dockerfile
+    image: <jupyterlab image name:tag>
+```
+
+#### For Matlab enabled jupyterlab  
+   Build Matlab image first:  
+   ```
+	cd matlab_im  
+	docker build -t matlab_om:2021b -f dockerfiles/Dockerfile context
+   ```  
+   See README file in `matlab_im` directory
+
+### Start the server  
+Open a terminal and go to the repository's directory. Enter `docker-compose up -d`.  
+`-d` is for detached mode. Omit this flag if you want to see outputs generated by the server (also available through [logs](https://docs.docker.com/engine/reference/commandline/logs/)).  
+To just build images, use `docker-compose build`.  
+Stop and remove containers, use `docker-compose down`.  
+Docker uses cache to build images faster. To take code updates into account, some volumes and or images may need to be removed as well (this can also be done from the Docker GUI).   
+For the Jupyterhub container:  
+`docker volume rm jupyterhub_jupyterhub_data`  
+`docker rmi jhub_ds`  
+To delete all images and volumes: `docker-compose down -v --rmi all` .  
+To remove user account on the hub container: `rm -rf /srv/jupyterhub/*`
+
+### Maintenance / backups
+Upgrading: https://jupyterhub.readthedocs.io/en/stable/admin/upgrading.html
+Backing up the JupyterHub database `sudo docker cp <container id>:/srv/jupyterhub/jupyterhub.sqlite jupyterhub.sqlite.bu`
+Backing up user directories. See this [example](https://github.com/jupyterhub/jupyterhub-deploy-docker#how-can-i-backup-a-users-notebook-directory). 
 
 
