@@ -10,6 +10,6 @@ RUN cd /tmp/matlab/R2021b && \
     ./install -inputFile installer_input_jh.txt
 RUN rm -rf /tmp/matlab/R2021b
 
-# Add Openmind configuration scripts 
-RUN mkdir /usr/local/MATLAB/R2021b/openmind # makes it available for copy to `userpath` at a later stage
-ADD /openmind/mit.nonshared.R2021b.tar.gz /usr/local/MATLAB/R2021b/openmind/ # unzips archive directly
+# Add Openmind configuration scripts (makes it available for copy to `userpath` at a later stage)
+RUN mkdir /usr/local/MATLAB/R2021b/openmind 
+ADD /openmind/mit.nonshared.R2021b.tar.gz /usr/local/MATLAB/R2021b/openmind/ 

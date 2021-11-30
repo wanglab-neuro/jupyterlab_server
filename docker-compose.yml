@@ -3,30 +3,45 @@ version: '3'
 services:
   jupyterhub:
     build: 
-      context: ./jupyterhub/jhub_matlab/context
+      context: ./jupyterhub/jhub_docker_spawner/context
       dockerfile: ../dockerfiles/Dockerfile
-    image: jhub_matlab:latest
-    container_name: jhub_matlab
-    networks:
-      default:
-        aliases:
-          - jhub_matlab
+    image: jhub_ds #wanglabneuro/jhub_ds:latest
+    container_name: jupyterhub
     volumes:
-      - /etc/ssl/:/etc/ssl/
-      - ~/data/d:/data
-      - ~/data/shared_files:/srv/shared_files
-      - ~/data/shared_code:/srv/shared_code
-    #environment:
-    #  - DOCKER_JUPYTER_CONTAINER=jupyterlab_img
-    #  - DOCKER_NETWORK_NAME=${COMPOSE_PROJECT_NAME}_default
-    #  - HUB_IP='0.0.0.0' #using jupyterhub (container name) fails
-    #  - HOST
-    #labels:
-    #  - "traefik.enable=true"
-    #  - "traefik.frontend.rule=Host:${HOST}"
-    ports:
-      - "8000:8000"
+      - /var/run/docker.sock:/var/run/docker.sock
+      - jupyterhub_data:/srv/jupyterhub # don't mount a host directory there, the db is there.      
+      - /volumes/jupyterhub:/home
+    environment:
+      - DOCKER_JUPYTER_CONTAINER=jlab_base:multilanguage
+      - DOCKER_NETWORK_NAME=${COMPOSE_PROJECT_NAME}_default
+      - HUB_IP=jupyterhub
+      - HOST
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:${HOST}"
     restart: on-failure
 
+  jupyterlab:
+    build: 
+      context: ./jupyterlab/jlab_multi/context
+      dockerfile: ../dockerfiles/Dockerfile
+    image: jlab_base:multilanguage #wanglabneuro/jlab_base:multilanguage
+    container_name: jupyterlab-throwaway
+    network_mode: none
+    command: echo
 
+  reverse-proxy:
+    image: traefik:1.7
+    container_name: reverse-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - ./reverse-proxy/traefik.toml:/etc/traefik/traefik.toml
+      - ./secret:/etc/certs
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: on-failure
 
+volumes:
+  jupyterhub_data:

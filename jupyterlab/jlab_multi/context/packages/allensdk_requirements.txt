@@ -1,0 +1,3 @@
+allensdk
+ipywidgets
+sklearn
