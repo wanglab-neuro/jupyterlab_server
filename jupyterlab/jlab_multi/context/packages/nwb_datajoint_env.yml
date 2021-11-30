@@ -22,8 +22,6 @@ dependencies:
     - labbox-ephys-widgets-jp>=0.1
     - kachery
     - kachery-client
-    - mountainsort4
-    - ml_ms4alg
     - spikeinterface>0.90
     - git+git://github.com/SpikeInterface/spikeextractors.git@e6f9255b0ff1a0140b313ae33b62b4676eeabfcd
     - spikesorters
@@ -37,3 +35,7 @@ dependencies:
     - h5py==2.10.*
     - sortingview>=0.6.16
     - git+git://github.com/LorenFrankLab/ndx-franklab-novela
+
+# Removed (fails): 
+#     - mountainsort4
+#     - ml_ms4alg
