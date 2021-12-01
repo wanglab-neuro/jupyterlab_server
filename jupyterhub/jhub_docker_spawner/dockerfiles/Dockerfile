@@ -1,4 +1,4 @@
-FROM jupyterhub/jupyterhub:1.4.2
+FROM jupyterhub/jupyterhub:1.5.0
 
 # APT packages
 RUN apt-get update && \
@@ -20,4 +20,4 @@ RUN pip install \
 
 # Copy Jupyterhub's configuration script and files used for bootstrapping new user accounts
 COPY jupyterhub_config.py bootstrap.sh HowTo.md ./
-RUN chmod +777 bootstrap.sh HowTo.md
+RUN chmod +754 bootstrap.sh HowTo.md
