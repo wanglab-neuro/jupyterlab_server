@@ -5,14 +5,14 @@ services:
     build: 
       context: ./jupyterhub/jhub_docker_spawner/context
       dockerfile: ../dockerfiles/Dockerfile
-    image: jhub_ds #wanglabneuro/jhub_ds:latest
+    image: wanglabneuro/jhub_ds:latest
     container_name: jupyterhub
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - jupyterhub_data:/srv/jupyterhub # don't mount a host directory there, the db is there.      
-      - /volumes/jupyterhub:/home
+      - /srv/jupyterhub:/home
     environment:
-      - DOCKER_JUPYTER_CONTAINER=jlab_base:multilanguage
+      - DOCKER_JUPYTER_CONTAINER=wanglabneuro/jlab_base:multilanguage
       - DOCKER_NETWORK_NAME=${COMPOSE_PROJECT_NAME}_default
       - HUB_IP=jupyterhub
       - HOST
@@ -25,7 +25,7 @@ services:
     build: 
       context: ./jupyterlab/jlab_multi/context
       dockerfile: ../dockerfiles/Dockerfile
-    image: jlab_base:multilanguage #wanglabneuro/jlab_base:multilanguage
+    image: wanglabneuro/jlab_base:multilanguage
     container_name: jupyterlab-throwaway
     network_mode: none
     command: echo

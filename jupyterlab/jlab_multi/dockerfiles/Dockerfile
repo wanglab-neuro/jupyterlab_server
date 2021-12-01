@@ -1,10 +1,10 @@
-FROM jupyter/scipy-notebook:hub-1.4.2
+FROM jupyter/datascience-notebook:hub-1.5.0
 
 LABEL maintainer="Vincent Prevosto <prevosto@mit.edu>"
 
 # Copy installation files
 COPY packages packages
-COPY --from=matlab_om:2021b /usr/local/MATLAB/R2021b /usr/local/MATLAB/R2021b
+COPY --from=wanglabneuro/matlab_om:2021b /usr/local/MATLAB/R2021b /usr/local/MATLAB/R2021b
 
 USER root
 # APT packages
@@ -34,27 +34,6 @@ RUN conda update -y conda && \
      conda install -y pip
 
 # Conda installs
-RUN conda install --quiet --yes \
-    'r-base' \
-    'r-irkernel' \
-    'r-plyr' \
-    'r-devtools' \
-    'r-tidyverse' \
-    'r-shiny' \
-    'r-rmarkdown' \
-    'r-rsqlite' \
-    'r-reshape2' \
-    'r-caret' \
-    'r-rcurl' \
-    'r-crayon' \
-    'r-randomforest' \
-    'r-htmltools' \
-    'r-sparklyr' \
-    'r-htmlwidgets' \
-    'r-hexbin' \
-    'jupyterhub' \
-    'julia' && \
-    conda clean -tipsy
 
 RUN conda config --set channel_priority flexible && \
     conda install -y -c conda-forge nb_conda_kernels \
