@@ -13,8 +13,9 @@ The instructions below detail how to set up the server.
 ### Configuration
 1. Install Docker (https://www.docker.com/get-started).  
 For Windows and MacOS machine, use Docker Desktop.  
-
-#### Additional instruction for Windows:
+<details>
+  <summary>Additional instruction for Windows (expand)</summary>
+	
    * Set up WSL if it's not already installed: https://docs.microsoft.com/en-us/windows/wsl/setup/environment.  
    * [optional but advisable] Move WSL and Docker to a dedicated disk. Exemple below to move them to the "J" disk.  
 		    **WSL**   
@@ -37,6 +38,8 @@ For Windows and MacOS machine, use Docker Desktop.
 		    `wsl --import docker-desktop-data J:\Docker\`
 		    `docker-desktop-data.tar --version 2`  
    * In Docker settings, enable the WSL2 based engine. Run Docker commands from WSL terminal (e.g., Start Menu > Ubuntu).  
+	
+</details>
 
 2. Clone or download this repository  
 For best performance on Windows machines, do that in WSL, not a Windows directory. 
@@ -77,29 +80,26 @@ Once the SSL Connection is enable, the unsecure address will not work. E.g., a c
 	* From [CUDA's WSL doc](https://docs.nvidia.com/cuda/wsl-user-guide/index.html): *Normally, CUDA toolkit for Linux will have the CUDA driver for NVIDIA GPU packaged with it. On WSL2, the CUDA driver used is part of the Windows driver installed on the system and therefore care must be taken to not install this Linux driver as it will clobber your installation.*
 
 8. Select which Jupyterlab version to run  
-In `docker-compose.yml`, the default image is specified in  
-```
-jupyterhub:
-...
-    environment:
-      - DOCKER_JUPYTER_CONTAINER=<jupyterlab image name:tag>
-```
-In addition, available images can be defined as follow (omit the build part if pulling from a Docker image repo):  
-```
-jupyterlab:
-    build: 
-      context: ./jupyterlab/<some jupyterlab flavor>/context
-      dockerfile: ../dockerfiles/Dockerfile
-    image: <jupyterlab image name:tag>
-```
-
-#### For Matlab enabled jupyterlab  
-   Build Matlab image first:  
-   ```
-	cd matlab_im  
-	docker build -t matlab_om:2021b -f dockerfiles/Dockerfile context
-   ```  
-   See README file in `matlab_im` directory
+	In `docker-compose.yml`, the default image is specified in  
+	```
+	jupyterhub:
+	...
+	    environment:
+	      - DOCKER_JUPYTER_CONTAINER=<jupyterlab image name:tag>
+	```
+	In addition, available images can be defined as follow (omit the build part if pulling from a Docker image repo):  
+	```
+	jupyterlab:
+	    build: 
+	      context: ./jupyterlab/<some jupyterlab flavor>/context
+	      dockerfile: ../dockerfiles/Dockerfile
+	    image: <jupyterlab image name:tag>
+	```
+	*For Matlab enabled jupyterlab*  
+	   Build Matlab image first:  
+	   `cd matlab_im`  
+	   `docker build -t matlab_om:2021b -f dockerfiles/Dockerfile context`  
+	   See README file in `matlab_im` directory
 
 ### Start the server  
 Open a terminal and go to the repository's directory. Enter `docker-compose up -d`.  
