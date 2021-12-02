@@ -5,7 +5,10 @@ on:
     types: [published]
     tags:
       - 'v*.*.*'
-    
+  workflow_dispatch:
+#     tags: $RELEASE_VERSION # doesn't work with manual trigger 
+#  use ${{ steps.meta.outputs.tags }} for build-push-action `tags` field
+
 env:
   REGISTRY: docker.io
   IMAGE_NAME: jhub_ds
