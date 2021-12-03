@@ -62,6 +62,16 @@ services:
       - "traefik.enable=false"
     command: echo
 
+  jupyterlab_tensorflow:
+    build: 
+      context: ./jupyterlab/jlab_tf/
+      dockerfile: ./dockerfiles/Dockerfile
+    image: wanglabneuro/jlab_tf:latest
+    container_name: jupyterlab-tensorflow
+    labels:
+      - "traefik.enable=false"
+    command: echo
+
   # jupyterlab:
   #   build: 
   #     context: ./jupyterlab/jlab_multi/context
