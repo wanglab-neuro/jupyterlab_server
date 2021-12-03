@@ -1,4 +1,4 @@
-FROM jupyter/base-notebook:hub-1.5.0
+FROM jupyter/minimal-notebook:hub-1.5.0
 
 LABEL maintainer="Vincent Prevosto <prevosto@mit.edu>"
 
@@ -51,5 +51,5 @@ RUN conda install --quiet --yes ipykernel && \
 
 RUN rm -rf packages
 
-# Make sue to switch back to user (avoid running ui containers as root)
+# Make sure to switch back to user (avoid running ui containers as root)
 USER $NB_UID

@@ -1,3 +1,10 @@
+### Use Jupyterlab
+
+Intro video: https://www.youtube.com/watch?v=A5YyoCKxEOU  
+  
+Getting started: 
+https://jupyterlab.readthedocs.io/en/stable/getting_started/overview.html  
+
 ### Add code from Github repository 
 
 **Public repositories** 

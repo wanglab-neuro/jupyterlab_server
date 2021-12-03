@@ -71,5 +71,5 @@ RUN conda install --quiet --yes ipykernel && \
 
 RUN rm -rf packages
 
-# Make sue to switch back to user (avoid running ui containers as root)
+# Make sure to switch back to user (avoid running ui containers as root)
 USER $NB_UID

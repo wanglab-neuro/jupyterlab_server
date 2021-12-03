@@ -1,0 +1,13 @@
+name: deeplabcut
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.8
+  #- pip
+  #- jupyter
+  #- nb_conda
+  - ffmpeg
+  - decorator
+  - tensorflow
+
