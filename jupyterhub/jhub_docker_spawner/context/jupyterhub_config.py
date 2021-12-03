@@ -10,7 +10,7 @@
 ##
 
 import os, sys, pwd, subprocess
-import shutil
+import docker
 
 ## Authenticator
 # c.JupyterHub.authenticator_class = 'nativeauthenticator.NativeAuthenticator'
@@ -70,7 +70,17 @@ c.DockerSpawner.image_whitelist = {
     'CaImAn':'wanglabneuro/jlab_caiman',
     'Brain Render':'wanglabneuro/brainrender-wanglab',
     'Whisker Tracker':'paulmthompson/whiskertracker',
-    'Tensorflow':'jupyter/tensorflow-notebook'}
+    'Tensorflow':'wanglabneuro/jlab_tf'}
+
+## access GPU
+c.DockerSpawner.extra_host_config = {
+    "device_requests": [
+        docker.types.DeviceRequest(
+            count=-1,
+            capabilities=[["gpu"]],
+        ),
+    ],
+}
 
 ## Remove containers once they are stopped
 c.DockerSpawner.remove_containers = True
