@@ -4,9 +4,9 @@ on:
   release:
     types: [published]
     tags:
-      - 'v*.*.*'
+      - 'v*'
   workflow_dispatch:
-#     tags: $RELEASE_VERSION # doesn't work with manual trigger 
+#     ${{ steps.vars.outputs.tag }} tags: $RELEASE_VERSION # doesn't work with manual trigger 
 #  use ${{ steps.meta.outputs.tags }} for build-push-action `tags` field
 
 env:
@@ -51,11 +51,9 @@ jobs:
       # https://github.com/docker/build-push-action
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
-        env:
-          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
         with:
           context: ./jupyterhub/jhub_docker_spawner/context
           file: ./jupyterhub/jhub_docker_spawner/dockerfiles/Dockerfile
           push: true
-          tags: $RELEASE_VERSION
+          tags: ${{ steps.vars.outputs.tag }}
           labels: ${{ steps.meta.outputs.labels }}
