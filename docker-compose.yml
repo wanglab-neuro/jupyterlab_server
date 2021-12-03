@@ -21,14 +21,65 @@ services:
       - "traefik.frontend.rule=Host:${HOST}"
     restart: on-failure
 
-  jupyterlab:
+
+  jupyterlab_multi:
     build: 
       context: ./jupyterlab/jlab_multi/context
       dockerfile: ../dockerfiles/Dockerfile
     image: wanglabneuro/jlab_base:multilanguage
-    container_name: jupyterlab-throwaway
-    network_mode: none
+    container_name: jupyterlab-multi
+    labels:
+      - "traefik.enable=false"
     command: echo
+
+  jupyterlab_matlab:
+    build: 
+      context: ./jupyterlab/jlab_matlab/context
+      dockerfile: ../dockerfiles/Dockerfile
+    image: wanglabneuro/jlab_matlab:2021b
+    container_name: jupyterlab-matlab
+    labels:
+      - "traefik.enable=false"
+    command: echo
+
+  jupyterlab_dlc:
+    build: 
+      context: ./jupyterlab/jlab_dlc/context
+      dockerfile: ../dockerfiles/Dockerfile
+    image: wanglabneuro/jlab_dlc:latest
+    container_name: jupyterlab-dlc
+    labels:
+      - "traefik.enable=false"
+    command: echo
+
+  jupyterlab_caiman:
+    build: 
+      context: ./jupyterlab/jlab_caiman/
+      dockerfile: ./dockerfiles/Dockerfile
+    image: wanglabneuro/jlab_caiman:latest
+    container_name: jupyterlab-caiman
+    labels:
+      - "traefik.enable=false"
+    command: echo
+
+  jupyterlab_tensorflow:
+    build: 
+      context: ./jupyterlab/jlab_tf/
+      dockerfile: ./dockerfiles/Dockerfile
+    image: wanglabneuro/jlab_tf:latest
+    container_name: jupyterlab-tensorflow
+    labels:
+      - "traefik.enable=false"
+    command: echo
+
+  # jupyterlab:
+  #   build: 
+  #     context: ./jupyterlab/jlab_multi/context
+  #     dockerfile: ../dockerfiles/Dockerfile
+  #   image: wanglabneuro/jlab_base:multilanguage
+  #   container_name: jupyterlab-throwaway
+  #   network_mode: none
+  #   command: echo
 
   reverse-proxy:
     image: traefik:1.7

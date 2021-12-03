@@ -10,15 +10,15 @@
 ##
 
 import os, sys, pwd, subprocess
-import shutil
+import docker
 
 ## Authenticator
-c.JupyterHub.authenticator_class = 'nativeauthenticator.NativeAuthenticator'
-c.Authenticator.admin_users = {'admin'}
+# c.JupyterHub.authenticator_class = 'nativeauthenticator.NativeAuthenticator'
+# c.Authenticator.admin_users = {'admin'}
 # Use dummy for testing purposes
-# c.JupyterHub.authenticator_class = "dummy"
-# c.Authenticator.admin_users = { 'test' }
-# c.DummyAuthenticator.password = "testpass"
+c.JupyterHub.authenticator_class = "dummy"
+c.Authenticator.admin_users = { 'test' }
+c.DummyAuthenticator.password = "testpass"
 
 ## Generic
 # c.JupyterHub.admin_access = True #give admins permission to log in to the single user notebook servers owned by other users
@@ -51,10 +51,36 @@ def pre_spawn_hook(spawner):
 c.Spawner.pre_spawn_hook = pre_spawn_hook
 
 c.JupyterHub.spawner_class = 'dockerspawner.DockerSpawner'
-c.DockerSpawner.image = os.environ['DOCKER_JUPYTER_CONTAINER']
+# c.DockerSpawner.image = os.environ['DOCKER_JUPYTER_CONTAINER']
 c.DockerSpawner.network_name = os.environ['DOCKER_NETWORK_NAME']
 # See https://github.com/jupyterhub/dockerspawner/blob/master/examples/oauth/jupyterhub_config.py
 c.JupyterHub.hub_ip = os.environ['HUB_IP']
+
+# Pick a docker image. 
+# c.DockerSpawner.allowed_images (DockerSpawner version 12.0+)
+
+c.JupyterHub.allow_named_servers=True
+c.JupyterHub.spawner_class = 'dockerspawner.DockerSpawner'
+c.DockerSpawner.name_template = '{prefix}-{username}-{imagename}' #{servername}
+c.DockerSpawner.image_whitelist = {
+    'Data science':'jupyter/datascience-notebook',
+    'Multi language':'wanglabneuro/jlab_base',
+    'Matlab':'wanglabneuro/jlab_matlab',
+    'DeepLabCut':'wanglabneuro/jlab_dlc',
+    'CaImAn':'wanglabneuro/jlab_caiman',
+    'Brain Render':'wanglabneuro/brainrender-wanglab',
+    'Whisker Tracker':'paulmthompson/whiskertracker',
+    'Tensorflow':'wanglabneuro/jlab_tf'}
+
+## access GPU
+c.DockerSpawner.extra_host_config = {
+    "device_requests": [
+        docker.types.DeviceRequest(
+            count=-1,
+            capabilities=[["gpu"]],
+        ),
+    ],
+}
 
 ## Remove containers once they are stopped
 c.DockerSpawner.remove_containers = True
@@ -67,7 +93,7 @@ c.DockerSpawner.notebook_dir = notebook_dir #home_dir
 c.DockerSpawner.volumes = {
         'jhub-user-{username}': home_dir,
 #         # '/home/{username}': home_dir,
-        '/volumes/jupyterhub/{username}/work': notebook_dir, #home_dir + '/work',   
+        '/srv/jupyterhub/{username}/work': notebook_dir, #home_dir + '/work',   
 #         '/volumes/jupyterhub/{username}': notebook_dir,
         '/home/wanglab/data/d': {"bind": '/data', "mode": "ro"},
         '/data/shared': notebook_dir + '/shared'
