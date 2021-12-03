@@ -2,7 +2,7 @@ FROM jupyter/tensorflow-notebook
 
 LABEL maintainer="Vincent Prevosto <prevosto@mit.edu>"
 
-COPY --from=tensorflow/tensorflow:latest-gpu-py3-jupyter /tf/tensorflow-tutorials ./tensorflow-tutorials
+COPY --from=tensorflow/tensorflow:latest-gpu-py3-jupyter /tf/tensorflow-tutorials /media/tensorflow-tutorials
 COPY --from=jupyter/base-notebook /usr/local/bin/fix-permissions /usr/local/bin/fix-permissions
 
 USER root

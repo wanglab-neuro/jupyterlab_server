@@ -5,7 +5,7 @@ LABEL maintainer="Vincent Prevosto <prevosto@mit.edu>"
 #COPY --from=tensorflow/tensorflow:latest-gpu-py3-jupyter /tf/tensorflow-tutorials ./tensorflow-tutorials
 COPY --from=jupyter/base-notebook /usr/local/bin/fix-permissions /usr/local/bin/fix-permissions
 COPY packages packages
-COPY --from=deeplabcut/deeplabcut:latest-gui-jupyter /app/examples ./examples
+COPY --from=deeplabcut/deeplabcut:latest-gui-jupyter /app/examples /media/examples
 
 USER root
 # APT packages
