@@ -6,8 +6,8 @@ on:
     tags:
       - 'v*'
   workflow_dispatch:
-#     ${{ steps.vars.outputs.tag }} tags: $RELEASE_VERSION # doesn't work with manual trigger 
-#  use ${{ steps.meta.outputs.tags }} for build-push-action `tags` field
+#     env: tag: $RELEASE_VERSION: ${{ steps.vars.outputs.tag }} then tags: $RELEASE_VERSION # doesn't work 
+#     use ${{ steps.meta.outputs.tags }} 
 
 env:
   REGISTRY: docker.io
@@ -55,5 +55,5 @@ jobs:
           context: ./jupyterhub/jhub_docker_spawner/context
           file: ./jupyterhub/jhub_docker_spawner/dockerfiles/Dockerfile
           push: true
-          tags: ${{ steps.vars.outputs.tag }}
+          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
