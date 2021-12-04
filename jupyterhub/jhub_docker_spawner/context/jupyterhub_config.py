@@ -61,11 +61,20 @@ c.JupyterHub.hub_ip = os.environ['HUB_IP']
 
 c.JupyterHub.allow_named_servers=True
 c.JupyterHub.spawner_class = 'dockerspawner.DockerSpawner'
-c.DockerSpawner.name_template = '{prefix}-{username}-{imagename}' #{servername}
+
+# get image name without tag
+
+#imagename = list(imagename.values())[0]
+#imagename = 'wanglabneuro/jlab_base:multilanguage'
+imagename_notag = imagename.partition(':')
+# imagename_notag = ('wanglabneuro/jlab_base', ':', 'multilanguage')
+imagename_notag = imagename_notag[0]
+
+c.DockerSpawner.name_template = '{prefix}-{username}-{imagename_notag}-{servername}' #{imagename} bugs with image tags :/
 c.DockerSpawner.image_whitelist = {
     'Data science':'jupyter/datascience-notebook',
-    'Multi language':'wanglabneuro/jlab_base',
-    'Matlab':'wanglabneuro/jlab_matlab',
+    'Multi language':'wanglabneuro/jlab_base:multilanguage',
+    'Matlab':'wanglabneuro/jlab_matlab:2021b',
     'DeepLabCut':'wanglabneuro/jlab_dlc',
     'CaImAn':'wanglabneuro/jlab_caiman',
     'Brain Render':'wanglabneuro/brainrender-wanglab',
