@@ -10,6 +10,7 @@ USER root
 # APT packages
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
+    sshfs \
     fonts-dejavu \
     tzdata \
     scilab && \

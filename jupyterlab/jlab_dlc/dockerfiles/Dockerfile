@@ -13,6 +13,7 @@ RUN apt update && \
     apt install -y --no-install-recommends \
     #wget \
     #gcc \
+    sshfs \
     fonts-dejavu && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*

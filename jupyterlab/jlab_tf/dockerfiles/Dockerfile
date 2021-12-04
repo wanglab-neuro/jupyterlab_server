@@ -9,6 +9,7 @@ USER root
 # APT packages
 RUN apt update && \
     apt install -y --no-install-recommends \
+    sshfs \
     fonts-dejavu && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
