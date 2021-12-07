@@ -79,6 +79,7 @@ c.DockerSpawner.image_whitelist = {
     'Matlab':'wanglabneuro/jlab_matlab:2021b',
     'DeepLabCut':'wanglabneuro/jlab_dlc',
     'CaImAn':'wanglabneuro/jlab_caiman',
+    'MIN1PIPE' : 'wanglabneuro/jlab_minipipe',
     'Brain Render':'wanglabneuro/brainrender-wanglab',
     'Whisker Tracker':'paulmthompson/whiskertracker',
     'Tensorflow':'wanglabneuro/jlab_tf'}
