@@ -13,18 +13,20 @@ import os, sys, pwd, subprocess
 import docker
 
 ## Authenticator
-# c.JupyterHub.authenticator_class = 'nativeauthenticator.NativeAuthenticator'
-# c.Authenticator.admin_users = {'admin'}
-# Use dummy for testing purposes
-c.JupyterHub.authenticator_class = "dummy"
-c.Authenticator.admin_users = { 'test' }
-c.DummyAuthenticator.password = "testpass"
+c.JupyterHub.authenticator_class = 'nativeauthenticator.NativeAuthenticator'
+c.Authenticator.admin_users = {'admin'}
+# Use null or dummy for testing purposes
+# c.JupyterHub.authenticator_class = 'null' (Hub 2.0)
+# c.JupyterHub.authenticator_class = "dummy"
+# c.Authenticator.admin_users = { 'test' }
+# c.DummyAuthenticator.password = "testpass"
 
 ## Generic
 # c.JupyterHub.admin_access = True #give admins permission to log in to the single user notebook servers owned by other users
 
 ## Docker spawner
 c.Spawner.default_url = '/lab'
+# c.Spawner.cmd=["jupyter-labhub"]
 
 # Updating permissions for volumes mounted from host
 # See comment from Min RK in this thread:
@@ -66,11 +68,11 @@ c.JupyterHub.spawner_class = 'dockerspawner.DockerSpawner'
 
 #imagename = list(imagename.values())[0]
 #imagename = 'wanglabneuro/jlab_base:multilanguage'
-imagename_notag = imagename.partition(':')
+# imagename_notag = imagename.partition(':')
 # imagename_notag = ('wanglabneuro/jlab_base', ':', 'multilanguage')
-imagename_notag = imagename_notag[0]
+# imagename_notag = imagename_notag[0]
 
-c.DockerSpawner.name_template = '{prefix}-{username}-{imagename_notag}-{servername}' #{imagename} bugs with image tags :/
+c.DockerSpawner.name_template = '{prefix}-{username}-{servername}' #{imagename} bugs with image tags :/
 c.DockerSpawner.image_whitelist = {
     'Data science':'jupyter/datascience-notebook',
     'Multi language':'wanglabneuro/jlab_base:multilanguage',
