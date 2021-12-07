@@ -5,11 +5,13 @@ LABEL maintainer="Vincent Prevosto <prevosto@mit.edu>"
 # Copy installation files
 COPY packages packages
 COPY --from=wanglabneuro/matlab_om:2021b /usr/local/MATLAB/R2021b /usr/local/MATLAB/R2021b
+ENV PATH="/usr/local/MATLAB/R2021b/bin:${PATH}"
 
 USER root
 # APT packages
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
+RUN apt update && \
+    apt install -y --no-install-recommends \
+    xvfb \
     fonts-dejavu \
     sshfs \
     tzdata \
@@ -28,6 +30,8 @@ RUN usermod -aG jhub_users ${NB_USER}
 #Switch to user
 USER $NB_UID
 
+RUN echo 'alias matlab="/usr/local/MATLAB/R2021b/bin/matlab"' >> ~/.bashrc
+
 # update Anaconda and install pip 
 RUN conda update -y conda && \
      conda install -y pip
@@ -40,6 +44,10 @@ RUN conda config --set channel_priority flexible && \
     jupyterlab-git \
     pynwb && \
     conda clean -tipsy
+
+# Install Matlab integration for Jupyter
+RUN python -m pip install jupyter-matlab-proxy && \
+    jupyter labextension install @jupyterlab/server-proxy
 
 # Create Matlab kernel environment
 RUN conda env create -f packages/jmatlab_env.yml
