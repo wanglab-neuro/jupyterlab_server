@@ -71,7 +71,7 @@ services:
     labels:
       - "traefik.enable=false"
     command: echo
-
+    
   jupyterlab_tensorflow:
     build: 
       context: ./jupyterlab/jlab_tf/
