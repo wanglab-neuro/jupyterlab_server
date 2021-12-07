@@ -62,6 +62,16 @@ services:
       - "traefik.enable=false"
     command: echo
 
+  jupyterlab_MIN1PIPE:
+    build: 
+      context: ./jupyterlab/jlab_MIN1PIPE/
+      dockerfile: ./Dockerfile
+    image: wanglabneuro/jlab_minipipe:latest
+    container_name: jupyterlab-minipipe
+    labels:
+      - "traefik.enable=false"
+    command: echo
+    
   jupyterlab_tensorflow:
     build: 
       context: ./jupyterlab/jlab_tf/

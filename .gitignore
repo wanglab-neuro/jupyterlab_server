@@ -5,6 +5,9 @@ matlab_im/context/openmind/mit.nonshared.R2021b.tar.gz
 # secret files
 secret/
 
+# backups
+backups/
+
 # tests and temporary files
 tmp/ 
 

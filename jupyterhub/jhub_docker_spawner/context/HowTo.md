@@ -5,6 +5,16 @@ Intro video: https://www.youtube.com/watch?v=A5YyoCKxEOU
 Getting started: 
 https://jupyterlab.readthedocs.io/en/stable/getting_started/overview.html  
 
+### Connect to your data directory on the server 
+Create a directory with your data as follow
+1. Open a terminal 
+2. Create a folder where you want your data to be.  
+e.g.: `mkdir ~/my-nese-data`
+3. create the connection:  
+`sshfs username@server-node.mit.edu:/path/to/wanglab/data/directory/USERFOLDER ~/my-nese-data`  
+That's it.  
+To remove the sftp connection: `sudo umount ~/my-nese-data`
+
 ### Add code from Github repository 
 
 **Public repositories** 

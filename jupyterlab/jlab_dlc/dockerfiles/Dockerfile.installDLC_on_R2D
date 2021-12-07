@@ -1,13 +1,18 @@
-FROM jupyter/tensorflow-notebook
+FROM deeplabcut:r2d
 
 LABEL maintainer="Vincent Prevosto <prevosto@mit.edu>"
+ARG NB_USER="jovyan"
+ARG NB_UID="1000"
+ARG NB_GID="100"
+ARG CONDA_DIR="/srv/conda"
 
 #COPY --from=tensorflow/tensorflow:latest-gpu-py3-jupyter /tf/tensorflow-tutorials ./tensorflow-tutorials
 COPY --from=jupyter/base-notebook /usr/local/bin/fix-permissions /usr/local/bin/fix-permissions
 COPY packages packages
-COPY --from=deeplabcut/deeplabcut:latest-gui-jupyter /app/examples /media/examples
+#COPY --from=deeplabcut/deeplabcut:latest-gui-jupyter /app/examples /media/examples
 
 USER root
+
 # APT packages
 RUN apt update && \
     apt install -y --no-install-recommends \
@@ -18,17 +23,15 @@ RUN apt update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN fix-permissions $CONDA_DIR && \
-fix-permissions /home/$NB_USER && \
-fix-permissions /home/$NB_USER/packages/
+SHELL ["conda","run","-n","base","/bin/bash","-c"]
 
+RUN fix-permissions $CONDA_DIR
+RUN fix-permissions /home/$NB_USER && \
+    fix-permissions /home/$NB_USER/packages/
 
 #Add user to jhub_users group, to get wr permissions to shared folder 
 RUN groupadd jhub_users 
 RUN usermod -aG jhub_users ${NB_USER}
-
-#Switch to user
-USER $NB_UID
 
 # update Anaconda and install pip 
 RUN conda update -y conda && \
@@ -46,7 +49,16 @@ RUN conda config --set channel_priority flexible && \
 RUN conda config --set channel_priority strict && \
     conda install -y -c conda-forge \
     jupyterlab-nvdashboard && \
-    conda clean -tipsy
+    conda clean -tipsy 
+
+RUN fix-permissions $CONDA_DIR && \
+    fix-permissions /home/$NB_USER
+RUN chown -R $NB_USER:jhub_users $CONDA_DIR/pkgs
+RUN mkdir /home/$NB_USER/.conda/pkgs && \
+    chown -R $NB_USER:jhub_users /home/$NB_USER/.conda/pkgs
+
+#Switch to user
+USER $NB_UID
 
 # Install DLC with pip
 # RUN pip install --no-cache-dir --upgrade "deeplabcut>=2.2.0.2"
