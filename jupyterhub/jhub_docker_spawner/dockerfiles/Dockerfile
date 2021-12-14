@@ -12,8 +12,11 @@ RUN apt-get update && \
 # Install Spawner, Authenticator and Idle culler
 RUN pip install \
     dockerspawner==12.1.0 \
-    #dockerspawner==0.11.1 \
-    oauthenticator==0.8.0 \
+    # For generic OAuthenticator:
+    oauthenticator \
+    # MIT OIDC oauthenticator: 
+    git+git://github.com/matted/mit-oidc-authenticator \ 
+    # Native Authenticator 
     jupyterhub-nativeauthenticator==1.0.5 \
 #    jupyterhub-kerberosauthenticator \
     jupyterhub-idle-culler
