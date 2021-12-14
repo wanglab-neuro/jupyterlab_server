@@ -12,17 +12,51 @@
 import os, sys, pwd, subprocess
 import docker
 
-## Authenticator
-c.JupyterHub.authenticator_class = 'nativeauthenticator.NativeAuthenticator'
-c.Authenticator.admin_users = {'admin'}
-# Use null or dummy for testing purposes
-# c.JupyterHub.authenticator_class = 'null' (Hub 2.0)
+#############################  Authentication ########################
+######################### Choose one of the options below ############
+
+############## Native authenticator (user create login / password, admin authorizes)
+
+# c.JupyterHub.authenticator_class = 'nativeauthenticator.NativeAuthenticator'
+# c.Authenticator.admin_users = {'admin'}
+
+############## Use null or dummy for testing purposes
+## c.JupyterHub.authenticator_class = 'null' (Hub 2.0)
 # c.JupyterHub.authenticator_class = "dummy"
 # c.Authenticator.admin_users = { 'test' }
 # c.DummyAuthenticator.password = "testpass"
 
+############## OAuth with Open ID
+from oauthenticator.generic import GenericOAuthenticator
+
+c.Application.log_level = 'DEBUG'
+
+c.JupyterHub.authenticator_class = GenericOAuthenticator
+c.GenericOAuthenticator.oauth_callback_url = os.environ['OAUTH_CALLBACK_URL']
+c.GenericOAuthenticator.client_id = os.environ['OAUTH_CLIENT_ID']
+c.GenericOAuthenticator.client_secret = os.environ['OAUTH_CLIENT_SECRET']
+
+c.GenericOAuthenticator.authorize_url = os.environ['OAUTH2_AUTHORIZE_URL']
+c.GenericOAuthenticator.token_url = os.environ['OAUTH2_TOKEN_URL']
+
+c.GenericOAuthenticator.userdata_url = os.environ['OAUTH2_USERDATA_URL']
+c.GenericOAuthenticator.userdata_method = 'GET'
+c.GenericOAuthenticator.userdata_params = {"state": "state"}
+
+c.LocalAuthenticator.create_system_users = True
+c.GenericOAuthenticator.username_key = 'preferred_username'
+
+# c.GenericOAuthenticator.scope = ['openid', 'profile', 'email', 'groups']
+# c.GenericOAuthenticator.admin_groups = ['Admins', 'admins']
+# c.OAuthenticator.tls_verify = False
+
+
+# Set user role and whitelist
+# c.Authenticator.admin_users = {'mal', 'zoe'}
+# c.Authenticator.allowed_users = {'mal', 'zoe', 'inara', 'kaylee'}
+
 ## Generic
-# c.JupyterHub.admin_access = True #give admins permission to log in to the single user notebook servers owned by other users
+c.JupyterHub.admin_access = True #give admins permission to log in to the single user notebook servers owned by other users
 
 ## Docker spawner
 c.Spawner.default_url = '/lab'
@@ -64,7 +98,7 @@ c.JupyterHub.hub_ip = os.environ['HUB_IP']
 c.JupyterHub.allow_named_servers=True
 c.JupyterHub.spawner_class = 'dockerspawner.DockerSpawner'
 
-# get image name without tag
+# get image name without tag -> not working 
 
 #imagename = list(imagename.values())[0]
 #imagename = 'wanglabneuro/jlab_base:multilanguage'
