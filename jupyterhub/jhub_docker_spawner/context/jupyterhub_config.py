@@ -12,24 +12,28 @@
 import os, sys, pwd, subprocess
 import docker
 
-#############################  Authentication ########################
+############################# Authentication ########################
 ######################### Choose one of the options below ############
 
-############## Native authenticator (user create login / password, admin authorizes)
+### Native authentication ###
+### user create login / password, admin authorizes
 
 # c.JupyterHub.authenticator_class = 'nativeauthenticator.NativeAuthenticator'
 # c.Authenticator.admin_users = {'admin'}
 
-############## Use null or dummy for testing purposes
-## c.JupyterHub.authenticator_class = 'null' (Hub 2.0)
+### Dummy authentication ###
+### Use dummy for testing purposes
 # c.JupyterHub.authenticator_class = "dummy"
 # c.Authenticator.admin_users = { 'test' }
 # c.DummyAuthenticator.password = "testpass"
+## Also available (Hub 2.0): c.JupyterHub.authenticator_class = 'null'
 
-############## OAuth with Open ID
+### OAuth 2.0 authentication with OAuth2/OpenID ###
+### Use this service if you have access to an OIDC server (e.g., https://oidc.mit.edu/)
+
 from oauthenticator.generic import GenericOAuthenticator
 
-c.Application.log_level = 'DEBUG'
+# c.Application.log_level = 'DEBUG'
 
 c.JupyterHub.authenticator_class = GenericOAuthenticator
 c.GenericOAuthenticator.oauth_callback_url = os.environ['OAUTH_CALLBACK_URL']
@@ -50,18 +54,19 @@ c.GenericOAuthenticator.username_key = 'preferred_username'
 # c.GenericOAuthenticator.admin_groups = ['Admins', 'admins']
 # c.OAuthenticator.tls_verify = False
 
-
 # Set user role and whitelist
 # c.Authenticator.admin_users = {'mal', 'zoe'}
 # c.Authenticator.allowed_users = {'mal', 'zoe', 'inara', 'kaylee'}
 
-## Generic
-c.JupyterHub.admin_access = True #give admins permission to log in to the single user notebook servers owned by other users
+############################# Generic ########################
+## Admin access: give admins permission to log in to the single user notebook servers owned by other users
+c.JupyterHub.admin_access = True 
 
-## Docker spawner
+## Docker spawner default URL 
 c.Spawner.default_url = '/lab'
 # c.Spawner.cmd=["jupyter-labhub"]
 
+############################# Permissions ########################
 # Updating permissions for volumes mounted from host
 # See comment from Min RK in this thread:
 # https://github.com/jupyterhub/dockerspawner/issues/160#issuecomment-330162308
@@ -75,6 +80,7 @@ c.DockerSpawner.environment = {
     "NB_GID": 1000,
 }
 
+############################# Pre-spawn Hook ########################
 #  Adding a HowTo file and tutorials before spawning the container   
 def pre_spawn_hook(spawner):
     username = spawner.user.name
@@ -86,6 +92,8 @@ def pre_spawn_hook(spawner):
 
 c.Spawner.pre_spawn_hook = pre_spawn_hook
 
+
+############################# Docker Spawner Configuration ########################
 c.JupyterHub.spawner_class = 'dockerspawner.DockerSpawner'
 # c.DockerSpawner.image = os.environ['DOCKER_JUPYTER_CONTAINER']
 c.DockerSpawner.network_name = os.environ['DOCKER_NETWORK_NAME']
@@ -96,7 +104,6 @@ c.JupyterHub.hub_ip = os.environ['HUB_IP']
 # c.DockerSpawner.allowed_images (DockerSpawner version 12.0+)
 
 c.JupyterHub.allow_named_servers=True
-c.JupyterHub.spawner_class = 'dockerspawner.DockerSpawner'
 
 # get image name without tag -> not working 
 
@@ -150,7 +157,9 @@ c.DockerSpawner.volumes = {
 #c.Spawner.cpu_limit = 1
 #c.Spawner.mem_limit = '10G'
 
-## Services
+
+############################# Services ########################
+ 
 c.JupyterHub.load_roles = [
     {
         "name": "jupyterhub-idle-culler-role",
