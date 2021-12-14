@@ -16,6 +16,8 @@ services:
       - DOCKER_NETWORK_NAME=${COMPOSE_PROJECT_NAME}_default
       - HUB_IP=jupyterhub
       - HOST
+    env_file:
+      - ./secret/oauth.env
     labels:
       - "traefik.enable=true"
       - "traefik.frontend.rule=Host:${HOST}"
