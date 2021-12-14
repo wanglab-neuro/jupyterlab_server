@@ -55,39 +55,46 @@ Create group and make this folder writable for anyone in that group.
 	```
 
 4. Adjust Jupyterhub settings  
-Open `jupyterhub_config.py` (found in folder `jupyterhub\jhub_docker_spawner\context`).  
-Modify the volumes in `c.DockerSpawner.volumes`
-	* `/home/wanglab/data/d` is the where the user data are located on the local computer. For example, if data are on the D drive, write `/mnt/d/`.  
-	Here the target directory is a symlink made to the actual data location, as follow:
-	`ln -s /home/wanglab/data/d /mnt/d`   
-	* `/data/shared` is the shared directory created on step 3. 
+Open `jupyterhub_config.py` (found in folder `jupyterhub\jhub_docker_spawner\context`).
+
+	**Authentication**  
+	See `Authentication` section.  
+	Currently available are:  
+	. Native authentication  
+	. Dummy authentication  
+	. OAuth authentication  
+	Just uncomment the one to use, comment the other.  
+  
+	**Images**   
+	The images available to the user are defined in `c.DockerSpawner.image_whitelist`.  
+	If an image does not exist locally, it will be downloaded (if it is publicly available).  
+  
+	**Volumes**   
+	Modify the volumes in `c.DockerSpawner.volumes`  
+		* `/home/wanglab/data/d` is the where the user data are located on the local computer. For example, if data are on Windows' D drive, write `/mnt/d/`.  
+		Here the target directory is a symlink made to the actual data location, as follow:
+		`ln -s /home/wanglab/data/d /mnt/d`   
+		* `/data/shared` is the shared directory created on step 3. 
 
 5. [optional but recommended] Request an SSL certificate to serve the notebooks over a secure HTTPS connection  
 See request instructions for MIT [here](http://kb.mit.edu/confluence/x/x487). The host computer should have a fully qualified domain name (request a static IP address to enable FQDN).  
 Once you get the certificate, place it with the key in a `secret` folder at the root of the repository.   
-Once the SSL Connection is enable, the unsecure address will not work. E.g., a computer with domain name lab-jhub-serv.mit.edu that was accessible at http://lab-jhub-serv:8000/hub/login should now be at: https://lab-jhub-serv.mit.edu:8000/hub/login. In the default configuration (using the proxy), the server is accessible without specifying the port: https://lab-jhub-serv.mit.edu/hub/.  
+Once the SSL Connection is enable, the unsecure address will not work. E.g., a computer with domain name lab-jhub-serv.mit.edu that was accessible at http://lab-jhub-serv:8000/hub/login should now be at: https://lab-jhub-serv.mit.edu:8000/hub/login. In the default configuration (using the proxy), the server is accessible without specifying the port, e.g: https://lab-jhub-serv.mit.edu/hub/.  
 
 6. Add content (e.g., for new user on-boarding)  
 	Three places to add user content:  
 	* `HowTo.md` file in `jhub_docker_spawner > context`. This file will be added to the user startup directory (`home/$USER/work`) by the bootstrap script.  
 	* The bootstrap script (also in `jhub_docker_spawner > context`) will create a `tutorials` directory and add a few helpful resources for data analysis, as well as a `Resources.md` file. Modify the section below `echo "Initial content loading for user"` to change the tutorials content. This content will only be generated once, the first time a new user logs in (which makes that first connection longer).  
 	* The shared directory. All files there will be available and modifiable by all users. A good place to start is to add the test notebooks from the notebooks folder.   
-
 7. [optional] enable GPU  
 	For NVidia, install CUDA driver and tookit. See instructions : https://docs.nvidia.com/cuda/.  
 	Two important points for Windows machines:  
 	* Services running on WSL (such as these containers) will only be able to access CUDA for recent Windows builts. In practice, this means Windows 11, or Windows 10 21H2 or higher (https://docs.microsoft.com/en-us/windows/whats-new/whats-new-windows-10-version-21h2#gpu-compute-support-for-the-windows-subsystem-for-linux). To upgrade to the later, register with Windows Insider program.
 	* From [CUDA's WSL doc](https://docs.nvidia.com/cuda/wsl-user-guide/index.html): *Normally, CUDA toolkit for Linux will have the CUDA driver for NVIDIA GPU packaged with it. On WSL2, the CUDA driver used is part of the Windows driver installed on the system and therefore care must be taken to not install this Linux driver as it will clobber your installation.*
 
-8. Select which Jupyterlab version to run  
-	In `docker-compose.yml`, the default image is specified in  
-	```
-	jupyterhub:
-	...
-	    environment:
-	      - DOCKER_JUPYTER_CONTAINER=<jupyterlab image name:tag>
-	```
-	In addition, available images can be defined as follow (omit the build part if pulling from a Docker image repo):  
+8. Build, test, add new images 
+	Home-made images can be built and run with the `docker-compose.jlabs.yml`. 
+	Use the following structure to modify or add new ones (omit the build part if pulling from a Docker image repo):  
 	```
 	jupyterlab:
 	    build: 
@@ -95,6 +102,8 @@ Once the SSL Connection is enable, the unsecure address will not work. E.g., a c
 	      dockerfile: ../dockerfiles/Dockerfile
 	    image: <jupyterlab image name:tag>
 	```
+	To build those images, use `docker-compose -f docker-compose.jlabs.yml build`. Specify a service name (e.g., `docker-compose -f docker-compose.jlabs.yml build jupyterlab_caiman`) if you only want to build a given image. 
+
 	*For Matlab enabled jupyterlab*  
 	   Build Matlab image first:  
 	   `cd matlab_im`  
