@@ -1,5 +1,5 @@
 ## jupyterlab server
-This [Jupyterlab](https://jupyterlab.readthedocs.io/en/latest/) server is designed to run on local data analysis computers, using Docker containers and [Jupyterhub](https://jupyterhub.readthedocs.io/en/stable/). This single-node, multi-container version (v2.x) is based on this [deployment](https://github.com/defeo/jupyterhub-docker/) and recent updates on forked repos.  
+This [Jupyterlab](https://jupyterlab.readthedocs.io/en/latest/) server is designed to run on local data analysis computers, using [Docker](https://docs.docker.com/) containers and [Jupyterhub](https://jupyterhub.readthedocs.io/en/stable/). This single-node, multi-container version (v2.x) is based on this [deployment](https://github.com/defeo/jupyterhub-docker/) and recent updates on forked repos.  
 It is OS independent (using WSL2 for Windows machines). 
 
 ### Main features
