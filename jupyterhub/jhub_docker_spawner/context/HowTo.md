@@ -15,6 +15,12 @@ e.g.: `mkdir ~/my-nese-data`
 That's it.  
 To remove the sftp connection: `sudo umount ~/my-nese-data`
 
+### Start Matlab GUI
+1. Click the Matlab icon
+2. Login with personal or network license (MIT Matlab 2021b license: 
+https://downloads.mit.edu/released/matlab/R2021b/short-license-file.txt)
+Enter license info with this formatting: 01234@server-address
+
 ### Add code from Github repository 
 
 **Public repositories** 
