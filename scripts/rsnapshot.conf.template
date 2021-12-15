@@ -1,0 +1,44 @@
+################## Important ####################
+# Make sure this backup script is owned by root,#
+# and not writable by anyone else.              #
+# sudo chown root:root rsnapshot.jupyter.conf   #
+#################################################
+
+# Config file version
+
+config_version  1.2
+
+# To add default configuration file, uncomment line below
+#include_conf   /etc/rsnapshot.conf
+
+# Directory to store snapshots
+snapshot_root   /mnt/j/backups/rsnapshots/
+
+# Program dependencies
+cmd_cp          /bin/cp
+cmd_rm          /bin/rm
+#rsync must be enabled for anything to work
+cmd_rsync       /usr/bin/rsync
+# enable remote ssh backups over rsync
+cmd_ssh         /usr/bin/ssh
+cmd_logger      /usr/bin/logger
+#cmd_du         /usr/bin/du # Uncomment this to specify the path to "du" for disk usage checks.
+
+# Backup levels / intervals
+retain  daily   6
+retain  weekly  7
+retain  monthly 4
+
+# Verbose level
+verbose         2
+loglevel        3
+logfile         /mnt/j/backups/rsnapshots/logs/rsnapshot.log
+# prevent two instances from running simultaneously:
+lockfile        /mnt/j/backups/rsnapshots/logs/rsnapshot.pid
+
+# Local backup points
+# Requires absolute paths. Create soft links if needed
+# e.g., `cd /usr/local/bin/` then `sudo ln -s ~/images/repos/jupyterlab_server/scripts jhub_backup_scripts`
+backup  /data/shared/           jhub/
+backup  /srv/jupyterhub/        jhub/
+backup_script   /usr/local/bin/jhub_backup_scripts/db_backup.sh jhub/db/

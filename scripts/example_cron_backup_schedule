@@ -1,0 +1,8 @@
+# daily snapshot everyday at 4:00 am
+0 4            * * *           root    /usr/bin/rsnapshot -c /usr/local/bin/jhub_backup_scripts/rsnapshot.jupyter.conf daily
+
+# weekly snapshot every Monday at 3:00 am
+0 3            * * 1           root    /usr/bin/rsnapshot -c /usr/local/bin/jhub_backup_scripts/rsnapshot.jupyter.conf weekly
+
+# monthly snapshot on the first of every month at 2:00 am
+0 2            1 * *           root    /usr/bin/rsnapshot -c /usr/local/bin/jhub_backup_scripts/rsnapshot.jupyter.conf monthly
