@@ -149,7 +149,7 @@ c.DockerSpawner.volumes = {
 #         # '/home/{username}': home_dir,
         '/srv/jupyterhub/{username}/work': notebook_dir, #home_dir + '/work',   
 #         '/volumes/jupyterhub/{username}': notebook_dir,
-        '/home/wanglab/data/d': {"bind": '/data', "mode": "ro"},
+        '/data/d': {"bind": '/data', "mode": "ro"},
         '/data/shared': notebook_dir + '/shared'
         }
 
