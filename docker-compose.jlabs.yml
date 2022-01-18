@@ -34,8 +34,8 @@ services:
 
   jupyterlab_caiman:
     build: 
-      context: ./jupyterlab/jlab_caiman/
-      dockerfile: ./dockerfiles/Dockerfile
+      context: ./jupyterlab/jlab_caiman/context
+      dockerfile: ../dockerfiles/Dockerfile
     image: wanglabneuro/jlab_caiman:latest
     container_name: jupyterlab-caiman
     labels:

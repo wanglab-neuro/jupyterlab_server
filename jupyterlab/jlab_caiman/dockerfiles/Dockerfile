@@ -3,6 +3,7 @@ FROM jupyter/tensorflow-notebook
 LABEL maintainer="Vincent Prevosto <prevosto@mit.edu>"
 
 COPY --from=jupyter/base-notebook /usr/local/bin/fix-permissions /usr/local/bin/fix-permissions
+COPY link_package_files.sh link_package_files.sh
 
 USER root
 # APT packages
@@ -46,9 +47,11 @@ SHELL ["conda","run","-n","caiman","/bin/bash","-c"]
 RUN conda install --quiet --yes ipykernel && \
     python -m ipykernel install --user --name caiman --display-name "CaImAn"
 RUN caimanmanager.py install
-
-#RUN rm -rf packages
+WORKDIR /home/$NB_USER
+USER root
+RUN cp -R caiman_data /media/caiman_data && \
+    fix-permissions /media/caiman_data
+RUN ["chmod", "+x", "link_package_files.sh"]
 
 # Make sure to switch back to user (avoid running ui containers as root)
-#USER $NB_UID
-
+USER $NB_UID

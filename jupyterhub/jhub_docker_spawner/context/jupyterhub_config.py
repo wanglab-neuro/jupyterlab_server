@@ -51,13 +51,13 @@ c.GenericOAuthenticator.userdata_params = {"state": "state"}
 c.LocalAuthenticator.create_system_users = True
 c.GenericOAuthenticator.username_key = 'preferred_username'
 
-# c.GenericOAuthenticator.scope = ['openid', 'profile', 'email', 'groups']
-# c.GenericOAuthenticator.admin_groups = ['Admins', 'admins']
-# c.OAuthenticator.tls_verify = False
+# #c.GenericOAuthenticator.scope = ['openid', 'profile', 'email', 'groups']
+# #c.GenericOAuthenticator.admin_groups = ['Admins', 'admins']
+# #c.OAuthenticator.tls_verify = False
 
-# Set user role and whitelist
-# c.Authenticator.admin_users = {'mal', 'zoe'}
-# c.Authenticator.allowed_users = {'mal', 'zoe', 'inara', 'kaylee'}
+# #Set user role and whitelist
+# #c.Authenticator.admin_users = {'mal', 'zoe'}
+# #c.Authenticator.allowed_users = {'mal', 'zoe', 'inara', 'kaylee'}
 
 ############################# Generic ########################
 ## Admin access: give admins permission to log in to the single user notebook servers owned by other users
@@ -93,6 +93,8 @@ def pre_spawn_hook(spawner):
 
 c.Spawner.pre_spawn_hook = pre_spawn_hook
 
+#c.DockerSpawner.post_start_cmd = 'sh -c "ln -s /media/caiman_data /home/jovyan/work"'
+c.DockerSpawner.post_start_cmd = 'bash -c "./link_package_files.sh"'
 
 ############################# Docker Spawner Configuration ########################
 c.JupyterHub.spawner_class = 'dockerspawner.DockerSpawner'
@@ -149,10 +151,9 @@ c.DockerSpawner.volumes = {
 #         # '/home/{username}': home_dir,
         '/srv/jupyterhub/{username}/work': notebook_dir, #home_dir + '/work',   
 #         '/volumes/jupyterhub/{username}': notebook_dir,
-        '/home/wanglab/data/d': {"bind": '/data', "mode": "ro"},
+        '/data/d': {"bind": '/data', "mode": "ro"},
         '/data/shared': notebook_dir + '/shared'
         }
-
 
 # Resource limits
 #c.Spawner.cpu_limit = 1
