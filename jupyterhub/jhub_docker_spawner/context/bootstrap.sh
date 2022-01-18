@@ -13,7 +13,8 @@ fi
 # Start the Bootstrap Process
 echo "bootstrap process running for user $USER ..."
 
-# Base Directory: All Directories for the user will be below this point
+# Base Directory: All Directories for the user will be below this point. 
+# This home directory is in the Jupyterhub container, and will be mounted to the spawned user container
 BASE_DIRECTORY=/home
 
 # User Directory: That's the private directory for the user to be created, if none exists
@@ -28,11 +29,11 @@ if [ ! -f "$WORK_DIRECTORY/HowTo.md" ]; then
     echo $2 > "$WORK_DIRECTORY/HowTo.md"
 fi
 
+# Create Tutorial directory if none exists
 TUTORIAL_DIRECTORY=$WORK_DIRECTORY/tutorials
 
 if [ -d "$TUTORIAL_DIRECTORY" ]; then
     echo "Tutorial directory for user already exists. Skipped"
-    exit 0 
 else
     echo "Creating a tutorials directory for the user: $TUTORIAL_DIRECTORY"
     mkdir $TUTORIAL_DIRECTORY
@@ -71,7 +72,6 @@ else
     mkdir $NEUROPIXELS_DIR && cd "$_"
     wget https://allensdk.readthedocs.io/en/latest/_static/examples/nb/ecephys_quickstart.ipynb
     wget https://allensdk.readthedocs.io/en/latest/_static/examples/nb/ecephys_session.ipynb
-
 fi
 
 exit 0
