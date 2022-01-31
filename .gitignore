@@ -2,6 +2,10 @@
 matlab_im/context/matlab/
 matlab_im/context/openmind/mit.nonshared.R2021b.tar.gz
 
+#configuration files, created from template files
+.env
+reverse-proxy/traefik.toml
+
 # secret files
 secret/
 
