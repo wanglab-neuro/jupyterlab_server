@@ -3,7 +3,7 @@ FROM jupyter/tensorflow-notebook
 LABEL maintainer="Vincent Prevosto <prevosto@mit.edu>"
 
 COPY --from=jupyter/base-notebook /usr/local/bin/fix-permissions /usr/local/bin/fix-permissions
-COPY link_package_files.sh link_package_files.sh
+COPY link_package_files.sh /media/link_package_files.sh
 
 USER root
 # APT packages
@@ -51,7 +51,7 @@ WORKDIR /home/$NB_USER
 USER root
 RUN cp -R caiman_data /media/caiman_data && \
     fix-permissions /media/caiman_data
-RUN ["chmod", "+x", "link_package_files.sh"]
+RUN ["chmod", "+x", "/media/link_package_files.sh"]
 
 # Make sure to switch back to user (avoid running ui containers as root)
 USER $NB_UID

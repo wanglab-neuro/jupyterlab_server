@@ -94,7 +94,7 @@ def pre_spawn_hook(spawner):
 c.Spawner.pre_spawn_hook = pre_spawn_hook
 
 #c.DockerSpawner.post_start_cmd = 'sh -c "ln -s /media/caiman_data /home/jovyan/work"'
-c.DockerSpawner.post_start_cmd = 'bash -c "./link_package_files.sh"'
+c.DockerSpawner.post_start_cmd = 'bash -c "/media/link_package_files.sh"'
 
 ############################# Docker Spawner Configuration ########################
 c.JupyterHub.spawner_class = 'dockerspawner.DockerSpawner'
