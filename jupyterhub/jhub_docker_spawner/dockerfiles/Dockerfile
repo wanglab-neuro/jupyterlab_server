@@ -22,5 +22,5 @@ RUN pip install \
     jupyterhub-idle-culler
 
 # Copy Jupyterhub's configuration script and files used for bootstrapping new user accounts
-COPY jupyterhub_config.py bootstrap.sh HowTo.md ./
-RUN chmod +754 bootstrap.sh HowTo.md
+COPY jupyterhub_config.py bootstrap.sh HowTo.md GetYourData.md ./
+RUN chmod +754 bootstrap.sh HowTo.md GetYourData.md

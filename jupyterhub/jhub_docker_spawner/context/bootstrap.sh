@@ -25,8 +25,8 @@ if [ ! -d "$WORK_DIRECTORY" ]; then
 fi
 
 # Create How-to file if it doesn't exist 
-if [ ! -f "$WORK_DIRECTORY/HowTo.md" ]; then
-    echo $2 > "$WORK_DIRECTORY/HowTo.md"
+if [ ! -f "$WORK_DIRECTORY/How To Do Stuff.md" ]; then
+    echo "$2" > "$WORK_DIRECTORY/How To Do Stuff.md"
 fi
 
 # Create Tutorial directory if none exists
@@ -72,6 +72,21 @@ else
     mkdir $NEUROPIXELS_DIR && cd "$_"
     wget https://allensdk.readthedocs.io/en/latest/_static/examples/nb/ecephys_quickstart.ipynb
     wget https://allensdk.readthedocs.io/en/latest/_static/examples/nb/ecephys_session.ipynb
+fi
+
+# Create Data directory if none exists
+DATA_DIRECTORY=$WORK_DIRECTORY/data
+
+if [ ! -d "$DATA_DIRECTORY" ]; then
+        mkdir -p $DATA_DIRECTORY
+        # mkdir -p $DATA_DIRECTORY/NESE
+fi
+cd $DATA_DIRECTORY
+ln -s /data WindowsData
+# Add Get data MD file if it doesn't exist 
+if [ ! -f "$DATA_DIRECTORY/Get your data.md" ]; then
+    echo "$3" > "$DATA_DIRECTORY/Get your data.md"
+    ln -s /usr/share/content/ content
 fi
 
 exit 0

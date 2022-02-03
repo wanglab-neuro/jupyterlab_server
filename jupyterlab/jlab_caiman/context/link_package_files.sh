@@ -19,3 +19,13 @@ if (( ${#files} )); then
 else 
   echo "Media directory is empty"
 fi
+
+# lastline="tail -1 $HOME/.bashrc"
+# if [ "$lastline" != "$WORK_DIRECTORY" ]; then
+#   echo "cd $HOME/work" >> ~/.bashrc
+# fi
+
+lastline="tail -1 $HOME/.profile"
+if [ "$lastline" != "$WORK_DIRECTORY" ]; then
+  echo "cd $HOME/work" >> ~/.bashrc
+fi

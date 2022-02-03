@@ -4,6 +4,7 @@ LABEL maintainer="Vincent Prevosto <prevosto@mit.edu>"
 
 COPY --from=jupyter/base-notebook /usr/local/bin/fix-permissions /usr/local/bin/fix-permissions
 COPY link_package_files.sh /media/link_package_files.sh
+ADD content /usr/share/content
 
 USER root
 # APT packages
