@@ -10,7 +10,8 @@ USER root
 SHELL ["conda","run","-n","jmatlab","/bin/bash","-c"]
 
 WORKDIR /srv
-RUN git clone https://github.com/JinghaoLu/MIN1PIPE.git
+RUN git clone https://github.com/wanglab-neuro/MIN1PIPE.git 
+#Original repo: https://github.com/JinghaoLu/MIN1PIPE.git
 
 RUN fix-permissions /home/$NB_USER && \
 	fix-permissions /srv/MIN1PIPE
