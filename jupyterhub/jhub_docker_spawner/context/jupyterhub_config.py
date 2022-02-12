@@ -132,6 +132,7 @@ c.DockerSpawner.image_whitelist = {
     # 'DeepLabCut':'wanglabneuro/jlab_dlc',
     # 'Whisker Tracker':'paulmthompson/whiskertracker',
     # 'Tensorflow':'wanglabneuro/jlab_tf'
+# DockerSpawner.image_whitelist is deprecated in DockerSpawner 12.0, use DockerSpawner.allowed_images instead
 
 ## access GPU
 c.DockerSpawner.extra_host_config = {
@@ -145,20 +146,23 @@ c.DockerSpawner.extra_host_config = {
 
 ## Remove containers once they are stopped
 c.DockerSpawner.remove_containers = True
+# DockerSpawner.remove_containers is deprecated in DockerSpawner 0.10.0, use DockerSpawner.remove instead
 
 # User data persistence
 home_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/jovyan'
-notebook_dir = home_dir + '/work'
+notebook_dir = home_dir # this is the root directory for the Jupyterlab sidebar
+data_dir = home_dir + '/data'
 c.DockerSpawner.notebook_dir = notebook_dir #home_dir
 # c.DockerSpawner.volumes = { 'jupyterhub-user-{username}': notebook_dir }
 c.DockerSpawner.volumes = {
-        'jhub-user-{username}': home_dir,
-#         # '/home/{username}': home_dir,
-        '/srv/jupyterhub/{username}/work': notebook_dir, #home_dir + '/work',   
-#         '/volumes/jupyterhub/{username}': notebook_dir,
-        '/data/d': {"bind": '/data', "mode": "ro"},
-        '/data/shared': notebook_dir + '/shared'
+        # 'jhub-user-{username}': home_dir,
+        # '/home/{username}': home_dir,
+        # '/srv/jupyterhub/{username}/work': notebook_dir, #home_dir + '/work',   
+        # '/volumes/jupyterhub/{username}': notebook_dir,
         # '/home/wanglab/my-nese-data': notebook_dir + '/data/NESE'
+        '/srv/jupyterhub/{username}': home_dir,
+        '/data/d': {"bind": data_dir + '/WindowsData', "mode": "rw"},
+        '/data/shared': data_dir + '/shared'
         }
 
 # Resource limits
