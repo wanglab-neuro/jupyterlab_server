@@ -5,6 +5,7 @@ LABEL maintainer="Vincent Prevosto <prevosto@mit.edu>"
 # Copy installation files
 COPY packages packages
 COPY --from=wanglabneuro/matlab_om:2021b /usr/local/MATLAB/R2021b /usr/local/MATLAB/R2021b
+ADD content /usr/share/content
 ENV PATH="/usr/local/MATLAB/R2021b/bin:${PATH}"
 
 USER root
