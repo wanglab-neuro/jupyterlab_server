@@ -19,18 +19,18 @@ BASE_DIRECTORY=/home
 
 # User Directory: That's the private directory for the user to be created, if none exists
 USER_DIRECTORY=$BASE_DIRECTORY/$USER
-WORK_DIRECTORY=$USER_DIRECTORY/work
-if [ ! -d "$WORK_DIRECTORY" ]; then
-    mkdir -p $WORK_DIRECTORY
-fi
+# WORK_DIRECTORY=$USER_DIRECTORY/work
+# if [ ! -d "$WORK_DIRECTORY" ]; then
+#     mkdir -p $WORK_DIRECTORY
+# fi
 
 # Create How-to file if it doesn't exist 
-if [ ! -f "$WORK_DIRECTORY/How To Do Stuff.md" ]; then
-    echo "$2" > "$WORK_DIRECTORY/How To Do Stuff.md"
+if [ ! -f "$USER_DIRECTORY/How To Do Stuff.md" ]; then
+    echo "$2" > "$USER_DIRECTORY/How To Do Stuff.md"
 fi
 
 # Create Tutorial directory if none exists
-TUTORIAL_DIRECTORY=$WORK_DIRECTORY/tutorials
+TUTORIAL_DIRECTORY=$USER_DIRECTORY/tutorials
 
 if [ -d "$TUTORIAL_DIRECTORY" ]; then
     echo "Tutorial directory for user already exists. Skipped"
@@ -75,18 +75,18 @@ else
 fi
 
 # Create Data directory if none exists
-DATA_DIRECTORY=$WORK_DIRECTORY/data
-
+DATA_DIRECTORY=$USER_DIRECTORY/data
 if [ ! -d "$DATA_DIRECTORY" ]; then
         mkdir -p $DATA_DIRECTORY
         # mkdir -p $DATA_DIRECTORY/NESE
 fi
+
 cd $DATA_DIRECTORY
-ln -s /data WindowsData
+# ln -s /data WindowsData
 # Add Get data MD file if it doesn't exist 
 if [ ! -f "$DATA_DIRECTORY/Get your data.md" ]; then
     echo "$3" > "$DATA_DIRECTORY/Get your data.md"
-    ln -s /usr/share/content/ content
+    # ln -s /usr/share/content/ content
 fi
 
 exit 0
