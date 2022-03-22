@@ -19,10 +19,10 @@ BASE_DIRECTORY=/home
 
 # User Directory: That's the private directory for the user to be created, if none exists
 USER_DIRECTORY=$BASE_DIRECTORY/$USER
-# WORK_DIRECTORY=$USER_DIRECTORY/work
-# if [ ! -d "$WORK_DIRECTORY" ]; then
-#     mkdir -p $WORK_DIRECTORY
-# fi
+WORK_DIRECTORY=$USER_DIRECTORY/work
+if [ ! -d "$WORK_DIRECTORY" ]; then
+    mkdir -p $WORK_DIRECTORY
+fi
 
 # Create How-to file if it doesn't exist 
 if [ ! -f "$USER_DIRECTORY/How To Do Stuff.md" ]; then
@@ -82,7 +82,7 @@ if [ ! -d "$DATA_DIRECTORY" ]; then
 fi
 
 cd $DATA_DIRECTORY
-# ln -s /data WindowsData
+ln -s /data WindowsData
 # Add Get data MD file if it doesn't exist 
 if [ ! -f "$DATA_DIRECTORY/Get your data.md" ]; then
     echo "$3" > "$DATA_DIRECTORY/Get your data.md"

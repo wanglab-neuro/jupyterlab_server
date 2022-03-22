@@ -161,9 +161,20 @@ c.DockerSpawner.volumes = {
         # '/volumes/jupyterhub/{username}': notebook_dir,
         # '/home/wanglab/my-nese-data': notebook_dir + '/data/NESE'
         '/srv/jupyterhub/{username}': home_dir,
-        '/data/d': {"bind": data_dir + '/WindowsData', "mode": "rw"},
-        '/data/shared': data_dir + '/shared'
+        # '/data/d': {"bind": data_dir + '/WindowsData', "mode": "rw"},
+        '/data/d': {"bind": '/data', "mode": "rw"},
+        '/data/shared': home_dir + '/shared'
         }
+
+# home_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/jovyan'
+# notebook_dir = home_dir
+# data_dir = notebook_dir + '/data'
+# c.DockerSpawner.notebook_dir = notebook_dir 
+# c.DockerSpawner.volumes = {
+#         '/srv/jupyterhub/{username}': home_dir,
+#         '/data/d': {"bind": '/data', "mode": "ro"},
+#         '/data/shared': data_dir + '/shared'
+#         }
 
 # Resource limits
 #c.Spawner.cpu_limit = 1

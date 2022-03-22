@@ -103,6 +103,8 @@ Once the SSL Connection is enable, the unsecure address will not work. E.g., a c
 	    image: <jupyterlab image name:tag>
 	```
 	To build those images, use `docker-compose -f docker-compose.jlabs.yml build`. Specify a service name (e.g., `docker-compose -f docker-compose.jlabs.yml build jupyterlab_caiman`) if you only want to build a given image. 
+	or navigate to directory  `docker build --no-cache -t wanglabneuro/jlab_matlab:2021b -f dockerfiles/Dockerfile context`
+	
 
 	*For Matlab enabled jupyterlab*  
 	   Build Matlab image first:  
