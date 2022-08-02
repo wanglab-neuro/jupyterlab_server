@@ -51,13 +51,13 @@ c.GenericOAuthenticator.userdata_params = {"state": "state"}
 c.LocalAuthenticator.create_system_users = True
 c.GenericOAuthenticator.username_key = 'preferred_username'
 
-# #c.GenericOAuthenticator.scope = ['openid', 'profile', 'email', 'groups']
-# #c.GenericOAuthenticator.admin_groups = ['Admins', 'admins']
-# #c.OAuthenticator.tls_verify = False
+#c.GenericOAuthenticator.scope = ['openid', 'profile', 'email', 'groups']
+#c.GenericOAuthenticator.admin_groups = ['Admins', 'admins']
+#c.OAuthenticator.tls_verify = False
 
-# #Set user role and whitelist
-# #c.Authenticator.admin_users = {'mal', 'zoe'}
-# #c.Authenticator.allowed_users = {'mal', 'zoe', 'inara', 'kaylee'}
+#Set user role and whitelist
+#c.Authenticator.admin_users = {'mal', 'zoe'}
+#c.Authenticator.allowed_users = {'mal', 'zoe', 'inara', 'kaylee'}
 
 ############################# Generic ########################
 ## Admin access: give admins permission to log in to the single user notebook servers owned by other users
@@ -123,6 +123,7 @@ c.DockerSpawner.name_template = '{prefix}-{username}-{servername}' #{imagename} 
 c.DockerSpawner.image_whitelist = {
     'CaImAn':'wanglabneuro/jlab_caiman',
     'MIN1PIPE' : 'wanglabneuro/jlab_minipipe',
+    'SpikeInterface' : 'wanglabneuro/spikeinterface:0.2',
     'Data science':'jupyter/datascience-notebook',
     'Multi language':'wanglabneuro/jlab_base:multilanguage',
     'Matlab':'wanglabneuro/jlab_matlab:2021b'
