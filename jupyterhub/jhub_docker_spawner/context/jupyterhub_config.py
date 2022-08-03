@@ -29,35 +29,43 @@ import docker
 # c.DummyAuthenticator.password = "testpass"
 ## Also available (Hub 2.0): c.JupyterHub.authenticator_class = 'null'
 
+### GitHub OAuth authentication
+from oauthenticator.github import GitHubOAuthenticator
+c.JupyterHub.authenticator_class = GitHubOAuthenticator
+c.GitHubOAuthenticator.oauth_callback_url = os.environ['GITHUB_CLIENT_ID']
+c.GitHubOAuthenticator.oauth_callback_url = os.environ['GITHUB_CLIENT_SECRET']
+c.GitHubOAuthenticator.oauth_callback_url = os.environ['OAUTH_CALLBACK_URL']
+# c.GitHubOAuthenticator.allowed_organizations = os.environ['GITHUB_ORG']
+
 ### OAuth 2.0 authentication with OAuth2/OpenID ###
 ### Use this service if you have access to an OIDC server (e.g., https://oidc.mit.edu/)
 
-from oauthenticator.generic import GenericOAuthenticator
+# from oauthenticator.generic import GenericOAuthenticator
 
-# c.Application.log_level = 'DEBUG'
+# # c.Application.log_level = 'DEBUG'
 
-c.JupyterHub.authenticator_class = GenericOAuthenticator
-c.GenericOAuthenticator.oauth_callback_url = os.environ['OAUTH_CALLBACK_URL']
-c.GenericOAuthenticator.client_id = os.environ['OAUTH_CLIENT_ID']
-c.GenericOAuthenticator.client_secret = os.environ['OAUTH_CLIENT_SECRET']
+# c.JupyterHub.authenticator_class = GenericOAuthenticator
+# c.GenericOAuthenticator.oauth_callback_url = os.environ['OAUTH_CALLBACK_URL']
+# c.GenericOAuthenticator.client_id = os.environ['OAUTH_CLIENT_ID']
+# c.GenericOAuthenticator.client_secret = os.environ['OAUTH_CLIENT_SECRET']
 
-c.GenericOAuthenticator.authorize_url = os.environ['OAUTH2_AUTHORIZE_URL']
-c.GenericOAuthenticator.token_url = os.environ['OAUTH2_TOKEN_URL']
+# c.GenericOAuthenticator.authorize_url = os.environ['OAUTH2_AUTHORIZE_URL']
+# c.GenericOAuthenticator.token_url = os.environ['OAUTH2_TOKEN_URL']
 
-c.GenericOAuthenticator.userdata_url = os.environ['OAUTH2_USERDATA_URL']
-c.GenericOAuthenticator.userdata_method = 'GET'
-c.GenericOAuthenticator.userdata_params = {"state": "state"}
+# c.GenericOAuthenticator.userdata_url = os.environ['OAUTH2_USERDATA_URL']
+# c.GenericOAuthenticator.userdata_method = 'GET'
+# c.GenericOAuthenticator.userdata_params = {"state": "state"}
 
-c.LocalAuthenticator.create_system_users = True
-c.GenericOAuthenticator.username_key = 'preferred_username'
+# c.LocalAuthenticator.create_system_users = True
+# c.GenericOAuthenticator.username_key = 'preferred_username'
 
-#c.GenericOAuthenticator.scope = ['openid', 'profile', 'email', 'groups']
-#c.GenericOAuthenticator.admin_groups = ['Admins', 'admins']
-#c.OAuthenticator.tls_verify = False
+# #c.GenericOAuthenticator.scope = ['openid', 'profile', 'email', 'groups']
+# #c.GenericOAuthenticator.admin_groups = ['Admins', 'admins']
+# #c.OAuthenticator.tls_verify = False
 
-#Set user role and whitelist
-#c.Authenticator.admin_users = {'mal', 'zoe'}
-#c.Authenticator.allowed_users = {'mal', 'zoe', 'inara', 'kaylee'}
+# #Set user role and whitelist
+# #c.Authenticator.admin_users = {'mal', 'zoe'}
+# #c.Authenticator.allowed_users = {'mal', 'zoe', 'inara', 'kaylee'}
 
 ############################# Generic ########################
 ## Admin access: give admins permission to log in to the single user notebook servers owned by other users
