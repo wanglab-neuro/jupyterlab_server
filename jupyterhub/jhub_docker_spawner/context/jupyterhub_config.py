@@ -127,11 +127,11 @@ c.JupyterHub.allow_named_servers=True
 # imagename_notag = ('wanglabneuro/jlab_base', ':', 'multilanguage')
 # imagename_notag = imagename_notag[0]
 
-c.DockerSpawner.name_template = '{prefix}-{username}-{servername}' #{imagename} bugs with image tags :/
-c.DockerSpawner.image_whitelist = {
+c.DockerSpawner.name_template = "{prefix}-{username}--{servername}" #{imagename} bugs with image tags :/
+c.DockerSpawner.allowed_images = {
+    'SpikeInterface' : 'wanglabneuro/spikeinterface-jupyterlab',
     'CaImAn':'wanglabneuro/jlab_caiman',
-    'MIN1PIPE' : 'wanglabneuro/jlab_minipipe',
-    'SpikeInterface' : 'wanglabneuro/spikeinterface:0.2',
+    'MIN1PIPE' : 'wanglabneuro/jlab_min1pipe',
     'Data science':'jupyter/datascience-notebook',
     'Multi language':'wanglabneuro/jlab_base:multilanguage',
     'Matlab':'wanglabneuro/jlab_matlab:2021b'
@@ -154,7 +154,7 @@ c.DockerSpawner.extra_host_config = {
 }
 
 ## Remove containers once they are stopped
-c.DockerSpawner.remove_containers = True
+c.DockerSpawner.remove = True
 # DockerSpawner.remove_containers is deprecated in DockerSpawner 0.10.0, use DockerSpawner.remove instead
 
 # User data persistence

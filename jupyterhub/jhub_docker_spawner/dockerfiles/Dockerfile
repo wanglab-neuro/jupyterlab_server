@@ -1,4 +1,4 @@
-FROM jupyterhub/jupyterhub:1.5.0
+FROM jupyterhub/jupyterhub:2.3.1
 
 # APT packages
 RUN apt update && \
@@ -20,13 +20,8 @@ RUN pip install \
     dockerspawner==12.1.0 \
     # For generic OAuthenticator:
     oauthenticator \
-    # MIT OIDC oauthenticator: 
-    git+https://github.com/matted/mit-oidc-authenticator.git \ 
     # Native Authenticator 
     jupyterhub-nativeauthenticator==1.0.5 \
-    # Kerberos Authenticator
-    # jupyterhub-kerberosauthenticator \
-    # git+https://github.com/jupyterhub/kerberosauthenticator.git \
     # Idle culler
     jupyterhub-idle-culler
 
