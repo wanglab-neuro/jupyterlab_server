@@ -1,9 +1,10 @@
-FROM jupyter/tensorflow-notebook
+FROM jupyter/tensorflow-notebook:hub-2.3.1
 
 LABEL maintainer="Vincent Prevosto <prevosto@mit.edu>"
 
 COPY --from=jupyter/base-notebook /usr/local/bin/fix-permissions /usr/local/bin/fix-permissions
 COPY link_package_files.sh /media/link_package_files.sh
+ADD content /usr/share/content
 
 USER root
 # APT packages
@@ -40,7 +41,7 @@ RUN conda config --set channel_priority strict && \
     jupyterlab-nvdashboard \
     pynvml \
     jupyterlab_execute_time && \
-    conda clean -tipsy
+    conda clean -tipy
 
 RUN mamba create -n caiman -c conda-forge caiman
 SHELL ["conda","run","-n","caiman","/bin/bash","-c"]

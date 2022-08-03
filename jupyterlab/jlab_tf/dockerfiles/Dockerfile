@@ -1,4 +1,4 @@
-FROM jupyter/tensorflow-notebook
+FROM jupyter/tensorflow-notebook:hub-2.3.1
 
 LABEL maintainer="Vincent Prevosto <prevosto@mit.edu>"
 

@@ -29,27 +29,35 @@ import docker
 # c.DummyAuthenticator.password = "testpass"
 ## Also available (Hub 2.0): c.JupyterHub.authenticator_class = 'null'
 
+### GitHub OAuth authentication
+from oauthenticator.github import GitHubOAuthenticator
+c.JupyterHub.authenticator_class = GitHubOAuthenticator
+c.GitHubOAuthenticator.oauth_callback_url = os.environ['GITHUB_CLIENT_ID']
+c.GitHubOAuthenticator.oauth_callback_url = os.environ['GITHUB_CLIENT_SECRET']
+c.GitHubOAuthenticator.oauth_callback_url = os.environ['OAUTH_CALLBACK_URL']
+# c.GitHubOAuthenticator.allowed_organizations = os.environ['GITHUB_ORG']
+
 ### OAuth 2.0 authentication with OAuth2/OpenID ###
 ### Use this service if you have access to an OIDC server (e.g., https://oidc.mit.edu/)
 
-from oauthenticator.generic import GenericOAuthenticator
+# from oauthenticator.generic import GenericOAuthenticator
 
-# c.Application.log_level = 'DEBUG'
+# # c.Application.log_level = 'DEBUG'
 
-c.JupyterHub.authenticator_class = GenericOAuthenticator
-c.GenericOAuthenticator.oauth_callback_url = os.environ['OAUTH_CALLBACK_URL']
-c.GenericOAuthenticator.client_id = os.environ['OAUTH_CLIENT_ID']
-c.GenericOAuthenticator.client_secret = os.environ['OAUTH_CLIENT_SECRET']
+# c.JupyterHub.authenticator_class = GenericOAuthenticator
+# c.GenericOAuthenticator.oauth_callback_url = os.environ['OAUTH_CALLBACK_URL']
+# c.GenericOAuthenticator.client_id = os.environ['OAUTH_CLIENT_ID']
+# c.GenericOAuthenticator.client_secret = os.environ['OAUTH_CLIENT_SECRET']
 
-c.GenericOAuthenticator.authorize_url = os.environ['OAUTH2_AUTHORIZE_URL']
-c.GenericOAuthenticator.token_url = os.environ['OAUTH2_TOKEN_URL']
+# c.GenericOAuthenticator.authorize_url = os.environ['OAUTH2_AUTHORIZE_URL']
+# c.GenericOAuthenticator.token_url = os.environ['OAUTH2_TOKEN_URL']
 
-c.GenericOAuthenticator.userdata_url = os.environ['OAUTH2_USERDATA_URL']
-c.GenericOAuthenticator.userdata_method = 'GET'
-c.GenericOAuthenticator.userdata_params = {"state": "state"}
+# c.GenericOAuthenticator.userdata_url = os.environ['OAUTH2_USERDATA_URL']
+# c.GenericOAuthenticator.userdata_method = 'GET'
+# c.GenericOAuthenticator.userdata_params = {"state": "state"}
 
-c.LocalAuthenticator.create_system_users = True
-c.GenericOAuthenticator.username_key = 'preferred_username'
+# c.LocalAuthenticator.create_system_users = True
+# c.GenericOAuthenticator.username_key = 'preferred_username'
 
 # #c.GenericOAuthenticator.scope = ['openid', 'profile', 'email', 'groups']
 # #c.GenericOAuthenticator.admin_groups = ['Admins', 'admins']
@@ -86,10 +94,13 @@ c.DockerSpawner.environment = {
 def pre_spawn_hook(spawner):
     username = spawner.user.name
     script = os.path.join(os.path.dirname(__file__), 'bootstrap.sh')
-    howto_file = os.path.join(os.path.dirname(__file__), 'HowTo.md')
-    with open(howto_file, 'r', newline='') as rf:
-        contents = rf.read()
-    subprocess.check_call([script, username, contents])
+    howto_mdfile = os.path.join(os.path.dirname(__file__), 'HowTo.md')
+    with open(howto_mdfile, 'r', newline='') as rf:
+        howto_contents = rf.read()
+    getdata_mdfile = os.path.join(os.path.dirname(__file__), 'GetYourData.md')
+    with open(getdata_mdfile, 'r', newline='') as rf:
+        getdata_contents = rf.read()
+    subprocess.check_call([script, username, howto_contents, getdata_contents])
 
 c.Spawner.pre_spawn_hook = pre_spawn_hook
 
@@ -116,17 +127,21 @@ c.JupyterHub.allow_named_servers=True
 # imagename_notag = ('wanglabneuro/jlab_base', ':', 'multilanguage')
 # imagename_notag = imagename_notag[0]
 
-c.DockerSpawner.name_template = '{prefix}-{username}-{servername}' #{imagename} bugs with image tags :/
-c.DockerSpawner.image_whitelist = {
+c.DockerSpawner.name_template = "{prefix}-{username}--{servername}" #{imagename} bugs with image tags :/
+c.DockerSpawner.allowed_images = {
+    'SpikeInterface' : 'wanglabneuro/spikeinterface-jupyterlab',
+    'CaImAn':'wanglabneuro/jlab_caiman',
+    'MIN1PIPE' : 'wanglabneuro/jlab_min1pipe',
     'Data science':'jupyter/datascience-notebook',
     'Multi language':'wanglabneuro/jlab_base:multilanguage',
-    'Matlab':'wanglabneuro/jlab_matlab:2021b',
-    'DeepLabCut':'wanglabneuro/jlab_dlc',
-    'CaImAn':'wanglabneuro/jlab_caiman',
-    'MIN1PIPE' : 'wanglabneuro/jlab_minipipe',
-    'Brain Render':'wanglabneuro/brainrender-wanglab',
-    'Whisker Tracker':'paulmthompson/whiskertracker',
-    'Tensorflow':'wanglabneuro/jlab_tf'}
+    'Matlab':'wanglabneuro/jlab_matlab:2021b'
+    }
+
+    # 'Brain Render':'wanglabneuro/brainrender-wanglab',
+    # 'DeepLabCut':'wanglabneuro/jlab_dlc',
+    # 'Whisker Tracker':'paulmthompson/whiskertracker',
+    # 'Tensorflow':'wanglabneuro/jlab_tf'
+# DockerSpawner.image_whitelist is deprecated in DockerSpawner 12.0, use DockerSpawner.allowed_images instead
 
 ## access GPU
 c.DockerSpawner.extra_host_config = {
@@ -139,21 +154,36 @@ c.DockerSpawner.extra_host_config = {
 }
 
 ## Remove containers once they are stopped
-c.DockerSpawner.remove_containers = True
+c.DockerSpawner.remove = True
+# DockerSpawner.remove_containers is deprecated in DockerSpawner 0.10.0, use DockerSpawner.remove instead
 
 # User data persistence
 home_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/jovyan'
-notebook_dir = home_dir + '/work'
+notebook_dir = home_dir # this is the root directory for the Jupyterlab sidebar
+data_dir = home_dir + '/data'
 c.DockerSpawner.notebook_dir = notebook_dir #home_dir
 # c.DockerSpawner.volumes = { 'jupyterhub-user-{username}': notebook_dir }
 c.DockerSpawner.volumes = {
-        'jhub-user-{username}': home_dir,
-#         # '/home/{username}': home_dir,
-        '/srv/jupyterhub/{username}/work': notebook_dir, #home_dir + '/work',   
-#         '/volumes/jupyterhub/{username}': notebook_dir,
-        '/data/d': {"bind": '/data', "mode": "ro"},
-        '/data/shared': notebook_dir + '/shared'
+        # 'jhub-user-{username}': home_dir,
+        # '/home/{username}': home_dir,
+        # '/srv/jupyterhub/{username}/work': notebook_dir, #home_dir + '/work',   
+        # '/volumes/jupyterhub/{username}': notebook_dir,
+        # '/home/wanglab/my-nese-data': notebook_dir + '/data/NESE'
+        '/srv/jupyterhub/{username}': home_dir,
+        # '/data/d': {"bind": data_dir + '/WindowsData', "mode": "rw"},
+        '/data/d': {"bind": '/data', "mode": "rw"},
+        '/data/shared': home_dir + '/shared'
         }
+
+# home_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/jovyan'
+# notebook_dir = home_dir
+# data_dir = notebook_dir + '/data'
+# c.DockerSpawner.notebook_dir = notebook_dir 
+# c.DockerSpawner.volumes = {
+#         '/srv/jupyterhub/{username}': home_dir,
+#         '/data/d': {"bind": '/data', "mode": "ro"},
+#         '/data/shared': data_dir + '/shared'
+#         }
 
 # Resource limits
 #c.Spawner.cpu_limit = 1
