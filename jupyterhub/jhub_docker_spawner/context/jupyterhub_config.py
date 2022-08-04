@@ -133,8 +133,8 @@ c.DockerSpawner.allowed_images = {
     'CaImAn':'wanglabneuro/jlab_caiman',
     'MIN1PIPE' : 'wanglabneuro/jlab_min1pipe',
     'Data science':'jupyter/datascience-notebook',
-    'Multi language':'wanglabneuro/jlab_base:multilanguage',
-    'Matlab':'wanglabneuro/jlab_matlab:2021b'
+    'Multi language':'wanglabneuro/jlab_multi',
+    'Matlab':'wanglabneuro/jlab_matlab'
     }
 
     # 'Brain Render':'wanglabneuro/brainrender-wanglab',
