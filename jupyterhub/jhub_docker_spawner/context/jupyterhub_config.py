@@ -169,10 +169,10 @@ c.DockerSpawner.volumes = {
         # '/srv/jupyterhub/{username}/work': notebook_dir, #home_dir + '/work',   
         # '/volumes/jupyterhub/{username}': notebook_dir,
         # '/home/wanglab/my-nese-data': notebook_dir + '/data/NESE'
-        '/srv/jupyterhub/{username}': home_dir,
+        '//j/jupyterhub/home/{username}': home_dir,
         # '/data/d': {"bind": data_dir + '/WindowsData', "mode": "rw"},
-        '/data/d': {"bind": '/data', "mode": "rw"},
-        '/data/shared': home_dir + '/shared'
+        "//d/": {"bind": '/data', "mode": "rw"}
+        # "//j/jupyterhub/shared": home_dir + '/shared'
         }
 
 # home_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/jovyan'

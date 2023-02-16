@@ -46,16 +46,16 @@ else
         echo "https://github.com/wanglab-neuro"
         echo "### Neurodata Without Borders "
         echo "https://github.com/NeurodataWithoutBorders"
-        echo "### Spike Interface"
-        echo "https://spikeinterface.readthedocs.io/"
-        echo "### KiloSort"
-        echo "https://github.com/MouseLand/Kilosort"
-        echo "### suite2p"
-        echo "https://github.com/MouseLand/suite2p"
-        echo "### CaImAn"
-        echo "https://caiman.readthedocs.io/en/master/"
-        echo "### MIN1PIPE"
-        echo "https://github.com/JinghaoLu/MIN1PIPE"
+        # echo "### Spike Interface"
+        # echo "https://spikeinterface.readthedocs.io/"
+        # echo "### KiloSort"
+        # echo "https://github.com/MouseLand/Kilosort"
+        # echo "### suite2p"
+        # echo "https://github.com/MouseLand/suite2p"
+        # echo "### CaImAn"
+        # echo "https://caiman.readthedocs.io/en/master/"
+        # echo "### MIN1PIPE"
+        # echo "https://github.com/JinghaoLu/MIN1PIPE"
         echo "### DeepLabCut"
         echo "https://deeplabcut.github.io/DeepLabCut"
     }> Resources.md
@@ -65,13 +65,13 @@ else
     # rm HEAD.zip
     git clone "https://github.com/jakevdp/PythonDataScienceHandbook.git" "Python-Data-Science-Handbook"
     git clone "https://github.com/patrickmineault/research_code" "Writing-Good-Research-Code"
-    git clone "https://github.com/NeurodataWithoutBorders/nwb_tutorial.git" "Neurodata-Without-Borders"
-    git clone "https://github.com/LorenFrankLab/nwb_datajoint.git" "Frank-lab-NWB-Datajoint-pipeline"
+    # git clone "https://github.com/NeurodataWithoutBorders/nwb_tutorial.git" "Neurodata-Without-Borders"
+    # git clone "https://github.com/LorenFrankLab/nwb_datajoint.git" "Frank-lab-NWB-Datajoint-pipeline"
 
-    NEUROPIXELS_DIR="Visual-Coding-Neuropixels"
-    mkdir $NEUROPIXELS_DIR && cd "$_"
-    wget https://allensdk.readthedocs.io/en/latest/_static/examples/nb/ecephys_quickstart.ipynb
-    wget https://allensdk.readthedocs.io/en/latest/_static/examples/nb/ecephys_session.ipynb
+    # NEUROPIXELS_DIR="Visual-Coding-Neuropixels"
+    # mkdir $NEUROPIXELS_DIR && cd "$_"
+    # wget https://allensdk.readthedocs.io/en/latest/_static/examples/nb/ecephys_quickstart.ipynb
+    # wget https://allensdk.readthedocs.io/en/latest/_static/examples/nb/ecephys_session.ipynb
 fi
 
 # Create Data directory if none exists
@@ -82,7 +82,9 @@ if [ ! -d "$DATA_DIRECTORY" ]; then
 fi
 
 cd $DATA_DIRECTORY
-ln -s /data WindowsData
+# If running Jupyterhub from WSL and binding directory to Windows side:
+# ln -s /data WindowsData
+
 # Add Get data MD file if it doesn't exist 
 if [ ! -f "$DATA_DIRECTORY/Get your data.md" ]; then
     echo "$3" > "$DATA_DIRECTORY/Get your data.md"
