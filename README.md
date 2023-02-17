@@ -67,14 +67,14 @@ Create group and make this folder writable for anyone in that group.
 	```
 
 4. Adjust Jupyterhub settings  
-Open `jupyterhub_config.py` (found in folder `jupyterhub\jhub_docker_spawner\context`).
+Open `jupyterhub_config.py` (in folder `jupyterhub\jhub_docker_spawner\context`, save `jupyterhub_config.py.template` as `jupyterhub_config.py`).
 
 	**Authentication**  
 	See `Authentication` section.  
 	Currently available are:  
 	. Native authentication  
 	. Dummy authentication  
-	. OAuth authentication  
+	. OAuth authentication (e.g., Github)
 	Just uncomment the one to use, comment the other.  
   
 	**Images**   
@@ -83,9 +83,7 @@ Open `jupyterhub_config.py` (found in folder `jupyterhub\jhub_docker_spawner\con
   
 	**Volumes**   
 	Modify the volumes in `c.DockerSpawner.volumes`  
-		* `/home/wanglab/data/d` is the where the user data are located on the local computer. For example, if data are on Windows' D drive, write `/mnt/d/`.  
-		Here the target directory is a symlink made to the actual data location, as follow:
-		`ln -s /home/wanglab/data/d /mnt/d`   
+		* The user data are located in a dirrectory presently named `/home/wanglab/data/d`. For Windows installs, the target directory can be a symlink made to the actual data location, as follow: `ln -s /home/<userid>/data/d /mnt/d`, for Windows' D drive. Then, just write `/mnt/d/` in `c.DockerSpawner.volumes`.   
 		* `/data/shared` is the shared directory created on step 3. 
 
 5. [optional but recommended] Request an SSL certificate to serve the notebooks over a secure HTTPS connection  
