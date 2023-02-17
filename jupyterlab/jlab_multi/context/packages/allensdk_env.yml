@@ -1,5 +1,0 @@
-name: allensdk
-dependencies:
-  - python=3.7
-  - jupyter
-  - ipykernel

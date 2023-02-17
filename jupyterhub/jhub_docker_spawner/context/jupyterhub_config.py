@@ -129,10 +129,10 @@ c.JupyterHub.allow_named_servers=True
 
 c.DockerSpawner.name_template = "{prefix}-{username}--{servername}" #{imagename} bugs with image tags :/
 c.DockerSpawner.allowed_images = {
+    'Data science':'jupyter/datascience-notebook',
     'SpikeInterface' : 'wanglabneuro/spikeinterface-jupyterlab',
     'CaImAn':'wanglabneuro/jlab_caiman',
     'MIN1PIPE' : 'wanglabneuro/jlab_min1pipe',
-    'Data science':'jupyter/datascience-notebook',
     'Multi language':'wanglabneuro/jlab_multi',
     'Matlab':'wanglabneuro/jlab_matlab'
     }
@@ -172,7 +172,7 @@ c.DockerSpawner.volumes = {
         '/srv/jupyterhub/{username}': home_dir,
         # '/data/d': {"bind": data_dir + '/WindowsData', "mode": "rw"},
         '/data/d': {"bind": '/data', "mode": "rw"},
-        '/data/shared': home_dir + '/shared'
+        '/data/jupyterhub/shared': home_dir + '/shared'
         }
 
 # home_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/jovyan'
