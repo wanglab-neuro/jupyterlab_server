@@ -1,6 +1,7 @@
 #configuration files, created from template files
 .env
 reverse-proxy/traefik.toml
+jupyterhub/jhub_docker_spawner/context/jupyterhub_config.py
 
 # secret files
 secret/
