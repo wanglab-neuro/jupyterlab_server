@@ -3,7 +3,7 @@ version: '3'
 services:
   jupyterhub:
     build: 
-      context: ./jupyterhub/jhub_docker_spawner/context
+      context: ./jupyterhub/context
       dockerfile: ../dockerfiles/Dockerfile
     image: wanglabneuro/jhub_ds:latest
     container_name: jupyterhub
