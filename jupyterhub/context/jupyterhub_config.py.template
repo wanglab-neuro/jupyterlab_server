@@ -119,29 +119,10 @@ c.JupyterHub.hub_ip = os.environ['HUB_IP']
 
 c.JupyterHub.allow_named_servers=True
 
-# get image name without tag -> not working 
-
-#imagename = list(imagename.values())[0]
-#imagename = 'wanglabneuro/jlab_base:multilanguage'
-# imagename_notag = imagename.partition(':')
-# imagename_notag = ('wanglabneuro/jlab_base', ':', 'multilanguage')
-# imagename_notag = imagename_notag[0]
-
 c.DockerSpawner.name_template = "{prefix}-{username}--{servername}" #{imagename} bugs with image tags :/
 c.DockerSpawner.allowed_images = {
-    'Data science':'jupyter/datascience-notebook',
-    'SpikeInterface' : 'wanglabneuro/spikeinterface-jupyterlab',
-    'CaImAn':'wanglabneuro/jlab_caiman',
-    'MIN1PIPE' : 'wanglabneuro/jlab_min1pipe',
-    'Multi language':'wanglabneuro/jlab_multi',
-    'Matlab':'wanglabneuro/jlab_matlab'
+    'Data science':'jupyter/datascience-notebook'
     }
-
-    # 'Brain Render':'wanglabneuro/brainrender-wanglab',
-    # 'DeepLabCut':'wanglabneuro/jlab_dlc',
-    # 'Whisker Tracker':'paulmthompson/whiskertracker',
-    # 'Tensorflow':'wanglabneuro/jlab_tf'
-# DockerSpawner.image_whitelist is deprecated in DockerSpawner 12.0, use DockerSpawner.allowed_images instead
 
 ## access GPU
 c.DockerSpawner.extra_host_config = {
@@ -155,7 +136,6 @@ c.DockerSpawner.extra_host_config = {
 
 ## Remove containers once they are stopped
 c.DockerSpawner.remove = True
-# DockerSpawner.remove_containers is deprecated in DockerSpawner 0.10.0, use DockerSpawner.remove instead
 
 # User data persistence
 home_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/jovyan'
@@ -164,26 +144,10 @@ data_dir = home_dir + '/data'
 c.DockerSpawner.notebook_dir = notebook_dir #home_dir
 # c.DockerSpawner.volumes = { 'jupyterhub-user-{username}': notebook_dir }
 c.DockerSpawner.volumes = {
-        # 'jhub-user-{username}': home_dir,
-        # '/home/{username}': home_dir,
-        # '/srv/jupyterhub/{username}/work': notebook_dir, #home_dir + '/work',   
-        # '/volumes/jupyterhub/{username}': notebook_dir,
-        # '/home/wanglab/my-nese-data': notebook_dir + '/data/NESE'
         '/srv/jupyterhub/{username}': home_dir,
-        # '/data/d': {"bind": data_dir + '/WindowsData', "mode": "rw"},
-        '/data/d': {"bind": '/data', "mode": "rw"},
-        '/data/jupyterhub/shared': home_dir + '/shared'
+        '/data/users': {"bind": '/data', "mode": "rw"},
+        '/data/shared': home_dir + '/shared'
         }
-
-# home_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/jovyan'
-# notebook_dir = home_dir
-# data_dir = notebook_dir + '/data'
-# c.DockerSpawner.notebook_dir = notebook_dir 
-# c.DockerSpawner.volumes = {
-#         '/srv/jupyterhub/{username}': home_dir,
-#         '/data/d': {"bind": '/data', "mode": "ro"},
-#         '/data/shared': data_dir + '/shared'
-#         }
 
 # Resource limits
 #c.Spawner.cpu_limit = 1

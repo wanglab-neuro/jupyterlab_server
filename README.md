@@ -67,14 +67,14 @@ Create group and make this folder writable for anyone in that group.
 	```
 
 4. Adjust Jupyterhub settings  
-Open `jupyterhub_config.py` (found in folder `jupyterhub\jhub_docker_spawner\context`).
+Open `jupyterhub_config.py` (in folder `jupyterhub\context`, save `jupyterhub_config.py.template` as `jupyterhub_config.py`).
 
 	**Authentication**  
 	See `Authentication` section.  
 	Currently available are:  
 	. Native authentication  
 	. Dummy authentication  
-	. OAuth authentication  
+	. OAuth authentication (e.g., Github)
 	Just uncomment the one to use, comment the other.  
   
 	**Images**   
@@ -83,9 +83,7 @@ Open `jupyterhub_config.py` (found in folder `jupyterhub\jhub_docker_spawner\con
   
 	**Volumes**   
 	Modify the volumes in `c.DockerSpawner.volumes`  
-		* `/home/wanglab/data/d` is the where the user data are located on the local computer. For example, if data are on Windows' D drive, write `/mnt/d/`.  
-		Here the target directory is a symlink made to the actual data location, as follow:
-		`ln -s /home/wanglab/data/d /mnt/d`   
+		* The user data are located in a dirrectory presently named `/home/wanglab/data/d`. For Windows installs, the target directory can be a symlink made to the actual data location, as follow: `ln -s /home/<userid>/data/d /mnt/d`, for Windows' D drive. Then, just write `/mnt/d/` in `c.DockerSpawner.volumes`.   
 		* `/data/shared` is the shared directory created on step 3. 
 
 5. [optional but recommended] Request an SSL certificate to serve the notebooks over a secure HTTPS connection  
@@ -95,8 +93,8 @@ Once the SSL Connection is enable, the unsecure address will not work. E.g., a c
 
 6. Add content (e.g., for new user on-boarding)  
 	Three places to add user content:  
-	* `HowTo.md` file in `jhub_docker_spawner > context`. This file will be added to the user startup directory (`home/$USER/work`) by the bootstrap script.  
-	* The bootstrap script (also in `jhub_docker_spawner > context`) will create a `tutorials` directory and add a few helpful resources for data analysis, as well as a `Resources.md` file. Modify the section below `echo "Initial content loading for user"` to change the tutorials content. This content will only be generated once, the first time a new user logs in (which makes that first connection longer).  
+	* `HowTo.md` file in `context`. This file will be added to the user startup directory (`home/$USER/work`) by the bootstrap script.  
+	* The bootstrap script (also in `context`) will create a `tutorials` directory and add a few helpful resources for data analysis, as well as a `Resources.md` file. Modify the section below `echo "Initial content loading for user"` to change the tutorials content. This content will only be generated once, the first time a new user logs in (which makes that first connection longer).  
 	* The shared directory. All files there will be available and modifiable by all users. A good place to start is to add the test notebooks from the notebooks folder.   
 7. [optional] enable GPU  
 	For NVidia, install CUDA driver and tookit. See instructions : https://docs.nvidia.com/cuda/.  
