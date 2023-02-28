@@ -83,7 +83,7 @@ if [ ! -d "$DATA_DIRECTORY" ]; then
 fi
 
 cd $DATA_DIRECTORY
-ln -s /data WindowsData
+# ln -s /data WindowsData
 # Add Get data MD file if it doesn't exist 
 if [ ! -f "$DATA_DIRECTORY/Get your data.md" ]; then
     echo "$3" > "$DATA_DIRECTORY/Get your data.md"

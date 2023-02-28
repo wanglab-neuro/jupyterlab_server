@@ -2,6 +2,7 @@
 .env
 reverse-proxy/traefik.toml
 jupyterhub/context/jupyterhub_config.py
+jupyterhub/context/bootstrap.sh
 
 # secret files
 secret/
@@ -14,3 +15,4 @@ tmp/
 
 # Zone.Identifier Files - created when copying from Windows to WSL filestructure
 *Zone.Identifier
+
