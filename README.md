@@ -9,11 +9,11 @@ It is OS independent (using WSL2 for Windows machines).
 - provides a simple deployment with limited maintenance, that requires little sys admin knowledge.
   
 The [configuration](#config) instructions below detail how to set up the server. 
-The main file to edit are named as `xxx.template`:  
+The main files to edit are labelled with the `.template` suffix:    
 - [jupyterhub_config.py.template](https://github.com/wanglab-neuro/jupyterlab_server/blob/main/jupyterhub/context/jupyterhub_config.py.template), found in `jupyterhub/context`.  
 - [bootstrap.sh.template](https://github.com/wanglab-neuro/jupyterlab_server/blob/main/jupyterhub/context/bootstrap.sh.template), found in `jupyterhub/context`.  
 - [traefik.toml.template](https://github.com/wanglab-neuro/jupyterlab_server/blob/main/reverse-proxy/traefik.toml.template), if using the reverse proxy, found in `reverse-proxy`.  
-Copy each of those files, removing the `template` suffix, and edit the content according to instructions below. 
+Copy each of those files, removing the `.template` suffix, and edit the content according to instructions below. 
 
 ### Start the server
 Open a terminal and go to the repository's directory. Enter `docker-compose up -d`.  
