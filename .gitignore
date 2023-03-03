@@ -3,6 +3,7 @@
 reverse-proxy/traefik.toml
 jupyterhub/context/jupyterhub_config.py
 jupyterhub/context/bootstrap.sh
+scripts/rsnapshot.jupyter.conf
 
 # secret files
 secret/
