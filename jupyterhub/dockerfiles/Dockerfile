@@ -1,4 +1,4 @@
-FROM jupyterhub/jupyterhub:2.3.1
+FROM jupyterhub/jupyterhub:3.1.1
 
 # APT packages
 RUN apt update && \
@@ -21,7 +21,7 @@ RUN pip install \
     # For generic OAuthenticator:
     oauthenticator \
     # Native Authenticator 
-    jupyterhub-nativeauthenticator==1.0.5 \
+    jupyterhub-nativeauthenticator \
     # Idle culler
     jupyterhub-idle-culler
 
