@@ -1,3 +1,8 @@
+
+
+[![DOI](https://zenodo.org/badge/424693423.svg)](https://zenodo.org/doi/10.5281/zenodo.10530099)
+
+
 ## Jupyterlab server
 This [Jupyterlab](https://jupyterlab.readthedocs.io/en/latest/) server is designed to run on local data analysis computers, using [Docker](https://docs.docker.com/) containers and [Jupyterhub](https://jupyterhub.readthedocs.io/en/stable/). This single-node, multi-container version is inspired by this [deployment](https://github.com/defeo/jupyterhub-docker/) and related forks.  
 It is OS independent (using WSL2 for Windows machines). 
