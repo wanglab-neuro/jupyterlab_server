@@ -1,8 +1,8 @@
-FROM jupyterhub/jupyterhub:2.3.1
+FROM jupyterhub/jupyterhub:4.1.5
 
 # APT packages
-RUN apt update && \
-    apt install -y --no-install-recommends \
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
     wget \
     build-essential \
     # libssl-dev \
@@ -17,14 +17,17 @@ RUN apt update && \
 # Install Spawner, Authenticator and Idle culler
 RUN python3 -m pip install --upgrade pip
 RUN pip install \
-    dockerspawner==12.1.0 \
+    dockerspawner==13.0.0 \
     # For generic OAuthenticator:
     oauthenticator \
     # Native Authenticator 
-    jupyterhub-nativeauthenticator==1.0.5 \
+    jupyterhub-nativeauthenticator==1.2.0 \
     # Idle culler
     jupyterhub-idle-culler
 
 # Copy Jupyterhub's configuration script and files used for bootstrapping new user accounts
-COPY jupyterhub_config.py bootstrap.sh HowTo.md GetYourData.md ./
+COPY jupyterhub/context/jupyterhub_bam_config.py.template ./jupyterhub_config.py
+COPY jupyterhub/context/bootstrap.sh.template ./bootstrap.sh
+COPY jupyterhub/context/HowTo.md ./HowTo.md
+COPY jupyterhub/context/GetYourData.md ./GetYourData.md
 RUN chmod +754 bootstrap.sh HowTo.md GetYourData.md

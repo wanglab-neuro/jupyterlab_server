@@ -96,6 +96,8 @@ Open `jupyterhub_config.py` (in folder `jupyterhub\context`, save `jupyterhub_co
 		* The user data are located in a dirrectory presently named `/home/wanglab/data/d`. For Windows installs, the target directory can be a symlink made to the actual data location, as follow: `ln -s /home/<userid>/data/d /mnt/d`, for Windows' D drive. Then, just write `/mnt/d/` in `c.DockerSpawner.volumes`.   
 		* `/data/shared` is the shared directory created on step 3. 
 
+Note: The `jupyterhub_bam_config.py.template` file is used only for the [BAM deployment](https://github.com/vncntprvst/tj_reanalysis.git).
+
 5. [optional but recommended] Request an SSL certificate to serve the notebooks over a secure HTTPS connection  
 See request instructions for MIT [here](http://kb.mit.edu/confluence/x/x487). The host computer should have a fully qualified domain name (request a static IP address to enable FQDN).  
 Once you get the certificate, place it with the key in a `secret` folder at the root of the repository.   
