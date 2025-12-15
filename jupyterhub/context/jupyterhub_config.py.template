@@ -26,7 +26,7 @@ import docker
 ### Use dummy for testing purposes
 # c.JupyterHub.authenticator_class = "dummy"
 # c.Authenticator.admin_users = { 'test' }
-# c.DummyAuthenticator.password = "testpass"
+# c.DummyAuthenticator.password = "password"
 ## Also available (Hub 2.0): c.JupyterHub.authenticator_class = 'null'
 
 ### GitHub OAuth authentication

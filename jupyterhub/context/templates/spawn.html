@@ -1,0 +1,106 @@
+{% extends "page.html" %}
+{% if announcement_spawn is string %}
+  {% set announcement = announcement_spawn %}
+{% endif %}
+
+{% block main %}
+<style>
+  .spawn-page .brand-header {
+    margin: 2rem auto 1rem auto;
+    text-align: center;
+  }
+  .spawn-page .brand-header img {
+    max-height: 80px;
+    margin-bottom: 1rem;
+  }
+  .spawn-page .resource-card {
+    border-left: 4px solid #f37324;
+    min-height: 200px;
+  }
+  .spawn-page .resource-card h3 {
+    margin-top: 0;
+  }
+  .spawn-page .resource-card p {
+    min-height: 80px;
+  }
+  .spawn-page .resource-card .btn {
+    margin-top: 0.5rem;
+  }
+  .spawn-page .resource-row {
+    margin-bottom: 2rem;
+  }
+  .spawn-page .spawn-error-msg {
+    margin-top: 10px;
+  }
+</style>
+<div class="container spawn-page">
+  {% block heading %}
+  <div class="row brand-header">
+    <div class="col-sm-12">
+      <img alt="Wang Lab logo" src="{{ base_url }}static/custom/Wang%20lab%20logo.png">
+      <h1>Brainstem Activity Map Hub</h1>
+      <p class="lead">Launch a Spyglass workspace or jump straight into the BAM book.</p>
+    </div>
+  </div>
+  {% endblock %}
+
+  <div class="row resource-row">
+    <div class="col-sm-6">
+      <div class="panel panel-default resource-card">
+        <div class="panel-body">
+          <h3>BAM Book</h3>
+          <p>Read the latest MAP PoC documentation, generated directly from our Quarto sources.</p>
+          <a class="btn btn-primary" href="{{ bam_book_url }}" target="_blank" rel="noopener">
+            Open BAM Book
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="panel panel-default resource-card">
+        <div class="panel-body">
+          <h3>Spyglass Starter Notebooks</h3>
+          <p>Your home directory stays clean—only a <code>~/notebooks</code> folder is pre-populated with the same tutorials shipped in the BAM book. Once your server is running, jump straight into that folder inside JupyterLab.</p>
+          <a class="btn btn-default" href="{{ base_url }}user-redirect/lab/tree/{{ spyglass_tutorial_path | urlencode }}" target="_blank" rel="noopener">
+            Open in JupyterLab
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row col-sm-offset-2 col-sm-8">
+    {% if for_user and user.name != for_user.name -%}
+      <p>Spawning server for {{ for_user.name }}</p>
+    {% endif -%}
+    {% if error_message -%}
+      <p class="spawn-error-msg text-danger">
+        Error: {{error_message}}
+      </p>
+    {% endif %}
+    <form enctype="multipart/form-data" id="spawn_form" action="{{ url | safe }}" method="post" role="form">
+      {{spawner_options_form | safe}}
+      <br>
+      <div class="feedback-container">
+        <input type="submit" value="Start" class="btn btn-jupyter form-control">
+        <div class="feedback-widget hidden">
+          <i class="fa fa-spinner"></i>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+{{ super() }}
+<script>
+$('form').submit((e) => {
+  var form = $(e.target);
+  form.find('.feedback-container>input').attr('disabled', true);
+  form.find('.feedback-container>*').toggleClass('hidden');
+  form.find('.feedback-widget>*').toggleClass('fa-pulse');
+});
+</script>
+{% endblock %}

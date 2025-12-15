@@ -30,4 +30,7 @@ COPY jupyterhub/context/jupyterhub_bam_config.py.template ./jupyterhub_config.py
 COPY jupyterhub/context/bootstrap.sh.template ./bootstrap.sh
 COPY jupyterhub/context/HowTo.md ./HowTo.md
 COPY jupyterhub/context/GetYourData.md ./GetYourData.md
+COPY jupyterhub/context/thebe_service.py ./thebe_service.py
+COPY jupyterhub/context/templates ./templates
+COPY jupyterhub/context/content /usr/local/share/jupyterhub/static/custom/
 RUN chmod +754 bootstrap.sh HowTo.md GetYourData.md

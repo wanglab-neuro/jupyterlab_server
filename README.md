@@ -15,7 +15,7 @@ It is OS independent (using WSL2 for Windows machines).
   
 The [configuration](#config) instructions below detail how to set up the server. 
 The main files to edit are labelled with the `.template` suffix:    
-- [jupyterhub_config.py.template](https://github.com/wanglab-neuro/jupyterlab_server/blob/main/jupyterhub/context/jupyterhub_config.py.template), found in `jupyterhub/context`.  
+- [jupyterhub_config.py.template](https://github.com/wanglab-neuro/jupyterlab_server/blob/main/jupyterhub/context/jupyterhub_config.py.template), found in `jupyterhub/context`. If working on the BAM deployement, use `jupyterhub_bam_config.py.template` instead.  
 - [bootstrap.sh.template](https://github.com/wanglab-neuro/jupyterlab_server/blob/main/jupyterhub/context/bootstrap.sh.template), found in `jupyterhub/context`.  
 - [traefik.toml.template](https://github.com/wanglab-neuro/jupyterlab_server/blob/main/reverse-proxy/traefik.toml.template), if using the reverse proxy, found in `reverse-proxy`.  
 Copy each of those files, removing the `.template` suffix, and edit the content according to instructions below. 
@@ -77,7 +77,7 @@ Create group and make this folder writable for anyone in that group.
 	```
 
 4. Adjust Jupyterhub settings  
-Open `jupyterhub_config.py` (in folder `jupyterhub\context`, save `jupyterhub_config.py.template` as `jupyterhub_config.py`).
+Open `jupyterhub_config.py` (in folder `jupyterhub\context`, save `jupyterhub_config.py.template` - or `jupyterhub_bam_config.py.template` - as `jupyterhub_config.py`).
 
 	**Authentication**  
 	See `Authentication` section.  
