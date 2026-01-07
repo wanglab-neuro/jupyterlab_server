@@ -1,13 +1,54 @@
 """
 Template JupyterHub config for the BAM stack.
-- DockerSpawner on the `bam` bridge network
+- DockerSpawner on the shared nginx network with post-start hooks
 - Reads DataJoint creds from Docker secrets
-- Points users to the Spyglass DB service inside the compose network
+- Adds extra Docker networks (spyglass-net) for DB access
 """
 import os
+import asyncio
+import docker
+from docker.errors import APIError, NotFound
+from dockerspawner import DockerSpawner
 from pathlib import Path
 
 c = get_config()  # noqa: F821
+
+
+class MultiNetworkDockerSpawner(DockerSpawner):
+    """DockerSpawner that attaches spawned containers to extra networks."""
+
+    extra_networks = [n.strip() for n in os.environ.get("DOCKER_EXTRA_NETWORKS", "").split(",") if n.strip()]
+    docker_client = docker.from_env()
+
+    async def start(self):
+        result = await super().start()
+        container_id = self.container_id
+        if not self.extra_networks:
+            return result
+
+        loop = asyncio.get_event_loop()
+
+        def _connect():
+            try:
+                container = self.docker_client.containers.get(container_id)
+            except NotFound:
+                self.log.warning("Container %s not found when attaching networks", container_id)
+                return
+
+            for net_name in self.extra_networks:
+                try:
+                    network = self.docker_client.networks.get(net_name)
+                    network.connect(container)
+                    self.log.info("Connected %s to network %s", container.name, net_name)
+                except APIError as exc:
+                    if "already exists" in str(exc).lower():
+                        self.log.info("%s already on network %s", container.name, net_name)
+                    else:
+                        self.log.error("Failed to connect %s to %s: %s", container.name, net_name, exc)
+
+        await loop.run_in_executor(None, _connect)
+        return result
+
 
 # Networking
 c.JupyterHub.hub_ip = os.environ.get("HUB_IP", "0.0.0.0")
@@ -16,12 +57,13 @@ c.JupyterHub.base_url = "/hub/"
 c.JupyterHub.allow_named_servers = True
 
 # Spawner
-c.JupyterHub.spawner_class = "dockerspawner.DockerSpawner"
+c.JupyterHub.spawner_class = MultiNetworkDockerSpawner
 c.DockerSpawner.image = os.environ.get("DOCKER_NOTEBOOK_IMAGE", "wanglabneuro/spyglass-user:py311")
-c.DockerSpawner.network_name = os.environ.get("DOCKER_NETWORK_NAME", "map-ephys")
+c.DockerSpawner.network_name = os.environ.get("DOCKER_NETWORK_NAME", "deploy_default")
 c.DockerSpawner.remove_containers = True
 c.DockerSpawner.debug = True
-c.DockerSpawner.extra_create_kwargs = {"tty": True}
+c.DockerSpawner.extra_create_kwargs = {"tty": True, "user": os.environ.get("DOCKER_NOTEBOOK_USER", "root")}
+c.Spawner.default_url = "/lab"
 
 # Secrets -> env for spawned servers
 dj_password = ""
@@ -36,18 +78,42 @@ c.DockerSpawner.environment = {
     "DJ_HOST": os.environ.get("DJ_HOST", "spyglass-db"),
     "DJ_USER": os.environ.get("DJ_USER", "jupyter_readonly"),
     "DJ_PASSWORD": dj_password,
+    "TJ_REPO_ROOT": "/srv/bam-resources/tj-repo",
+    "CHOWN_HOME": "yes",
+    "CHOWN_EXTRA": "/home/jovyan",
+    "CHOWN_HOME_OPTS": "-R",
+    "NB_UID": "1000",
+    "NB_GID": "1000",
 }
 
-# Volumes (optional: mount a shared scratch)
+# Volumes - per-user persistent storage + shared repo
+notebook_dir = os.environ.get("DOCKER_NOTEBOOK_DIR", "/home/jovyan")
+repo_host_path = os.environ.get("TJ_REPO_HOST_PATH")
+repo_container_path = os.environ.get("TJ_REPO_CONTAINER_PATH", "/srv/bam-resources/tj-repo")
+
+c.DockerSpawner.notebook_dir = notebook_dir
 c.DockerSpawner.volumes = {
-    "jupyterhub-shared": "/home/jovyan/shared"
+    "/srv/jupyterhub/{username}": {"bind": notebook_dir, "mode": "rw"},
 }
+
+if repo_host_path:
+    c.DockerSpawner.volumes[repo_host_path] = {"bind": repo_container_path, "mode": "ro"}
+    c.DockerSpawner.environment["TJ_REPO_ROOT"] = repo_container_path
+
+# Optional dataset mount (read-only)
+datasets_host_path = os.environ.get("DATASETS_HOST_PATH")
+datasets_container_path = os.environ.get("DATASETS_CONTAINER_PATH")
+if datasets_host_path and datasets_container_path:
+    c.DockerSpawner.volumes[datasets_host_path] = {
+        "bind": datasets_container_path,
+        "mode": "ro",
+    }
 
 # Auth (placeholder: swap with desired authenticator)
 c.JupyterHub.authenticator_class = "jupyterhub.auth.DummyAuthenticator"
 c.DummyAuthenticator.password = os.environ.get("JUPYTERHUB_DUMMY_PW", "password")
-# For production, this section in jupyterhub_bam_config.py.template to use GitHub OAuth or another provider.
-# Security Tip: change the default password by setting the JUPYTERHUB_DUMMY_PW environment variable in docker-compose.yml.
+# For production, change authenticator + dummy password in docker-compose env.
 
-# Services (admin panel enabled)
 c.JupyterHub.admin_access = True
+
+# Multi-network attach handled by MultiNetworkDockerSpawner.start()
