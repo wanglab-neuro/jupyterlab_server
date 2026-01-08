@@ -1,0 +1,53 @@
+"""
+Template JupyterHub config for the BAM stack.
+- DockerSpawner on the `bam` bridge network
+- Reads DataJoint creds from Docker secrets
+- Points users to the Spyglass DB service inside the compose network
+"""
+import os
+from pathlib import Path
+
+c = get_config()  # noqa: F821
+
+# Networking
+c.JupyterHub.hub_ip = os.environ.get("HUB_IP", "0.0.0.0")
+c.JupyterHub.hub_connect_ip = "jupyterhub"
+c.JupyterHub.base_url = "/hub/"
+c.JupyterHub.allow_named_servers = True
+
+# Spawner
+c.JupyterHub.spawner_class = "dockerspawner.DockerSpawner"
+c.DockerSpawner.image = os.environ.get("DOCKER_NOTEBOOK_IMAGE", "wanglabneuro/spyglass-user:py311")
+c.DockerSpawner.network_name = os.environ.get("DOCKER_NETWORK_NAME", "map-ephys")
+c.DockerSpawner.remove_containers = True
+c.DockerSpawner.debug = True
+c.DockerSpawner.extra_create_kwargs = {"tty": True}
+
+# Secrets -> env for spawned servers
+dj_password = ""
+dj_secret_path = "/run/secrets/dj_password"
+try:
+    if os.path.exists(dj_secret_path):
+        dj_password = Path(dj_secret_path).read_text().strip()
+except Exception:
+    dj_password = ""
+
+c.DockerSpawner.environment = {
+    "DJ_HOST": os.environ.get("DJ_HOST", "spyglass-db"),
+    "DJ_USER": os.environ.get("DJ_USER", "jupyter_readonly"),
+    "DJ_PASSWORD": dj_password,
+}
+
+# Volumes (optional: mount a shared scratch)
+c.DockerSpawner.volumes = {
+    "jupyterhub-shared": "/home/jovyan/shared"
+}
+
+# Auth (placeholder: swap with desired authenticator)
+c.JupyterHub.authenticator_class = "jupyterhub.auth.DummyAuthenticator"
+c.DummyAuthenticator.password = os.environ.get("JUPYTERHUB_DUMMY_PW", "password")
+# For production, this section in jupyterhub_bam_config.py.template to use GitHub OAuth or another provider.
+# Security Tip: change the default password by setting the JUPYTERHUB_DUMMY_PW environment variable in docker-compose.yml.
+
+# Services (admin panel enabled)
+c.JupyterHub.admin_access = True
